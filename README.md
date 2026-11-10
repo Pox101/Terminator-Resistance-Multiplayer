@@ -22,16 +22,25 @@ remain unverified. See [the related UE4SS issue](https://github.com/UE4SS-RE/RE-
 - The joining player drives one existing bunker soldier. Its original
   actor, health, team and mission references stay on the host.
 - The host keeps the native Infiltrator weapon, health, HUD and vision.
+- Native Infiltrator shots damage the original player-controlled soldier.
+  Its native death contributes to the game's own kill statistics. A dead
+  defender loses movement and firing and stays eliminated without respawning.
 - Player shooting uses the soldier's original rifle range, rate, ammo and
   damage type, with server hit tests feeding the native damage system.
   Reload requests use the native weapon component.
 - Randomized bunker interior transforms are sent to the client.
 - Original mission objectives remain. There is no added round timer,
   defender-kill victory condition or automatic player respawn.
+- The client receives the native mission outcome. Native mission completion
+  and Infiltrator defeat stop further defender actions and show an end message.
+  For another test, close and relaunch the isolated preview games. The native
+  **Restart Mission** path is unreliable with a connected client.
 
 This is a one-defender experiment. Other soldiers remain NPCs. Additional
-human slots, full NPC animation/ragdoll synchronization, polished first-person
-hands and full mission completion still need work. The joining player's
+human slots, full NPC animation/ragdoll synchronization and polished first-person
+hands still need work. End-to-end native weapon hits, defender death and the
+native ending flow were exercised in an accelerated local integration test;
+a normal full-length playthrough and longer sessions remain unverified. The joining player's
 weapon/body presentation uses placeholder visuals.
 
 ## Earlier arena prototype

@@ -143,5 +143,10 @@ return function(H, C, emit)
         return aimState
     end
     return {update=update, input=input, isFocused=keyboardState,
+        clearWorld=function()
+            initialized={};positioned={};placementAfter={};hostInputReady={}
+            candidate=0;readyAfter=0;inputController=nil;pressUntil={};keyTaps={}
+            lastInputTime=nil;wasFocused=false
+        end,
         isPlaced=function(pawn) return valid(pawn) and positioned[pawn:GetAddress()]==true end}
 end

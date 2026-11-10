@@ -1,4 +1,4 @@
-param([string]$Version='0.3.0-steam-menu-preview')
+param([string]$Version='0.4.0-mission-lifecycle-preview')
 $ErrorActionPreference='Stop'
 if($Version -notmatch '^[0-9A-Za-z][0-9A-Za-z.-]{0,60}$'){throw 'Invalid version.'}
 $dist=Join-Path $PSScriptRoot 'dist'

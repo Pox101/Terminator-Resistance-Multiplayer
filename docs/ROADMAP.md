@@ -1,8 +1,10 @@
 # Roadmap
 
-1. Complete a native Infiltrator mission with one player controlling an
-   original bunker guard. Verify native incoming weapon damage, death/quest
-   callbacks, disconnect recovery and stability across fresh launches.
+1. Native incoming weapon damage, defender death and the original ending flow
+   have local integration coverage. Verify a normal full-length Infiltrator
+   playthrough, disconnect recovery and repeated travel across fresh launches.
+   Replace the unsafe native network Restart Mission path with a validated
+   return-to-lobby/restart flow before enabling Internet sessions.
    Add more occupied NPC slots only after the one-defender test is reliable.
 2. The Play Versus menu, private Steam lobby creation and native invitation
    dialog are available as a UI preview. Implement invitation acceptance,

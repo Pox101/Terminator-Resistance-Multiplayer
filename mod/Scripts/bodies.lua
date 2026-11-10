@@ -244,6 +244,7 @@ return function(H,C,emit,prototype)
         if not valid(world.NetDriver) then return end
         if world:GetAddress()~=worldAddress then
             if valid(reticle) then reticle:RemoveFromParent() end
+            if deadInput then pc:ResetIgnoreMoveInput();pc:ResetIgnoreLookInput() end
             worldAddress=world:GetAddress();bodies={};camera=nil;cameraPawn=nil
             reticle=nil;reticlePawn=nil;lastFrame=nil;currentFov=85;aiming=false
             hud=nil;hudText=nil;fpWeapon=nil;fpPawn=nil;combatView=nil;effectDefaults=nil;hudValue='';deadInput=false
@@ -376,14 +377,16 @@ return function(H,C,emit,prototype)
             for _,p in ipairs(combatView.players) do if p.id==combatView.you then own=p end end
         end
         local first=C.role=='host' or not thirdPerson
+        local missionEnded=combatView and combatView.missionPhase and combatView.missionPhase~='active'
         local dead=own and own.health<=0 or false
-        fpWeapon:SetActorHiddenInGame(not first or dead)
+        fpWeapon:SetActorHiddenInGame(not first or dead or missionEnded)
         local reloading=own and own.reloadMs>0 or false
         fpWeapon:K2_SetActorRelativeLocation({X=time<recoilUntil and 32 or 38,Y=13,Z=reloading and -26 or -19},false,{},true)
-        if dead~=deadInput then
-            if dead then pc:SetIgnoreMoveInput(true);pc:SetIgnoreLookInput(true)
+        local blocked=dead or missionEnded or false
+        if blocked~=deadInput then
+            if blocked then pc:SetIgnoreMoveInput(true);pc:SetIgnoreLookInput(true)
             else pc:ResetIgnoreMoveInput();pc:ResetIgnoreLookInput() end
-            deadInput=dead
+            deadInput=blocked
         end
         local message='Connecting combat state...'
         if own then
@@ -396,7 +399,15 @@ return function(H,C,emit,prototype)
         local round=_G.TRMPCombat and _G.TRMPCombat.round and _G.TRMPCombat.round()
         if C.scenario=='infiltrator_hunt' and own then
             message=string.format('RESISTANCE NPC | Health %d/%d | Ammo %d\nLMB fire | R reload\nDefend the bunker. Original Infiltrator objectives remain.',own.health,own.maxHealth,own.ammo)
-            if dead then message=message..'\nYour soldier is dead. The original mission continues.' end
+            if dead then
+                message=message..'\nYour soldier is dead.'
+                if combatView.missionPhase=='active' then message=message..' The original mission continues.' end
+            end
+            if combatView.missionPhase=='completed' then
+                message=message..'\nMISSION COMPLETE — the Infiltrator finished its original objectives.'
+            elseif combatView.missionPhase=='failed' then
+                message=message..'\nMISSION ENDED — the Infiltrator was stopped or the native mission failed.'
+            end
         end
         if round then
             local status=round.phase=='waiting' and 'Waiting for the other player'
@@ -437,6 +448,13 @@ return function(H,C,emit,prototype)
     end
     local api={update=safeUpdate,frame=frame,command=command,dispose=dispose,isReady=isReady,
         setCombat=setCombat,combatFrame=combatFrame,shotEffect=shotEffect,
+        clearWorld=function()
+            bodies={};worldAddress=0;camera=nil;cameraPawn=nil;reticle=nil;reticlePawn=nil
+            hud=nil;hudText=nil;fpWeapon=nil;fpPawn=nil;combatView=nil;effectDefaults=nil
+            lastFrame=nil;created={};cameraFocused=false;hudValue='';hostAim=nil;hostFov=nil
+            -- Keep deadInput until the new controller can safely clear its
+            -- input lock in update; do not touch the old controller here.
+        end,
         state=function() return {aiming=aiming,fov=currentFov,thirdPerson=thirdPerson,vision=vision} end}
     _G.TRMPBodies=api
     return api

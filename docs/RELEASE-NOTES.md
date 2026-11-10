@@ -1,3 +1,23 @@
+# 0.4.0 — native mission lifecycle preview
+
+Preserves native Infiltrator weapon hits and the original soldier's health,
+death callbacks and kill-statistic contribution. Stops movement, firing and
+reloads after defender death without ending the Infiltrator mission.
+
+Replicates native mission completion/failure and disables further defender
+combat. Observes the shipped Infiltrator summary callback because its quest
+actor remains Active even after the native MISSION COMPLETE screen appears.
+Native failure/death takes priority over a summary. Excludes named commanders
+from takeover and resets the mod's input lock when a new world is loaded.
+Quiesces finished-client presentation and clears cached world handles on
+supported travel callbacks; avoids the incompatible UE4SS3.0.1 LoadMap pre-hook.
+
+Includes mission phase/protocol tests and accelerated local integration
+validation. Full-duration normal playthroughs and repeated reconnect/travel
+remain experimental. Native in-place Restart Mission is unreliable; relaunch
+the isolated preview games for another run. Both instances should use this version. Steam invitation
+acceptance and Internet game transport are still the next milestone.
+
 # 0.3.0 — Steam menu and invitation preview
 
 Adds Play Versus below Infiltrator Mode in the original Play menu, without

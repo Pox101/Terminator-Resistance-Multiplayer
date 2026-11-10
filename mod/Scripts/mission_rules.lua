@@ -12,16 +12,33 @@ function M.select(candidates,bunker)
     end
     return best
 end
-function M.encode(you,players)
+local phases={active=true,completed=true,failed=true}
+-- Only native mission state ends the session. A dead defender is deliberately
+-- absent from this decision: the Infiltrator still has its original objectives.
+function M.phase(previous,terminatorHealth,objectiveState,nativeFailure,nativeSummary)
+    if previous=='completed' or previous=='failed' then return previous end
+    if nativeFailure or objectiveState==3 or (type(terminatorHealth)=='number' and terminatorHealth<=0) then return 'failed' end
+    -- The shipped Infiltrator ending opens its summary while the quest actor
+    -- still reports Active/stage 2. Observe that native callback as well.
+    if objectiveState==2 or nativeSummary then return 'completed' end
+    return 'active'
+end
+function M.encode(you,players,phase)
+    assert(phases[phase or 'active'],'Invalid mission phase')
     local rows={}
     for _,p in ipairs(players) do rows[#rows+1]=string.format('%d,%s,%d,%d,%d',p.id,p.faction,p.health,p.maxHealth,p.ammo) end
-    return 'TRMP1|M|'..you..'|'..table.concat(rows,';')
+    return 'TRMP1|M|'..you..'|'..(phase or 'active')..'|'..table.concat(rows,';')
 end
 function M.decode(text)
     if type(text)~='string' or #text>1024 then return nil end
-    local you,payload=text:match('^TRMP1|M|(%d+)|(.+)$');you=tonumber(you)
+    local you,phase,payload=text:match('^TRMP1|M|(%d+)|(%a+)|(.+)$')
+    -- Earlier local previews sent no phase field.
+    if not you then you,payload=text:match('^TRMP1|M|(%d+)|(.+)$');phase='active' end
+    you=tonumber(you)
+    if not phases[phase] then return nil end
     if not you or you>2147483647 then return nil end
     local players,seen={},{}
+    if payload:sub(1,1)==';' or payload:sub(-1)==';' or payload:find(';;',1,true) then return nil end
     for row in payload:gmatch('[^;]+') do
         local id,faction,hp,max,ammo=row:match('^(%d+),(%a+),(%d+),(%d+),(%d+)$')
         id,hp,max,ammo=tonumber(id),tonumber(hp),tonumber(max),tonumber(ammo)
@@ -31,6 +48,6 @@ function M.decode(text)
         if #players>2 then return nil end
     end
     if not seen[you] then return nil end
-    return {mode='pvp',you=you,players=players}
+    return {mode='pvp',you=you,players=players,missionPhase=phase}
 end
 return M

@@ -163,7 +163,26 @@ local function command(cmd)
 end
 local ticks = 0
 local keyCommands={}
+local missionPresentationFrozen=false
+local function pollCommands(ended)
+    local f=io.open(C.directory..'/command.txt','r')
+    if f and valid(context()) then
+        local cmd=f:read('*a'):match('^%s*(.-)%s*$');f:close()
+        os.remove(C.directory..'/command.txt')
+        if cmd~='' then
+            if not ended or cmd=='join' or cmd=='quit' then command(cmd)
+            else emit('mission_finished='..tostring(combat.state().missionPhase)..'; join_or_quit_available') end
+        end
+    elseif f then f:close() end
+    local queued=keyCommands;keyCommands={}
+    if not ended and (not prototype or prototype.isFocused()) then
+        for _,cmd in ipairs(queued) do command(cmd) end
+    end
+end
 local function update()
+    -- A finished client keeps its result on screen without traversing old
+    -- replicated actors while the host closes/restarts its world.
+    if missionPresentationFrozen then pollCommands(true);return end
     versusMenu.update(context())
     configureLocalNetworking()
     configurePrototypePlayers()
@@ -173,31 +192,33 @@ local function update()
     if prototype then prototype.update(context()) end
     if bodies then bodies.update(context()) end
     if combat then combat.update(context()) end
-    local f=io.open(C.directory..'/command.txt','r')
-    if f and valid(context()) then
-        local cmd=f:read('*a'):match('^%s*(.-)%s*$');f:close()
-        os.remove(C.directory..'/command.txt')
-        if cmd~='' then command(cmd) end
-    elseif f then f:close() end
-    local queued=keyCommands;keyCommands={}
-    if not prototype or prototype.isFocused() then
-        for _,cmd in ipairs(queued) do command(cmd) end
-    end
+    pollCommands(false)
     ticks=ticks+1
     if ticks%50==0 then snapshot() end
 end
 local function input()
+    if missionPresentationFrozen then return end
     local pc=context()
     local aim=prototype and prototype.input(pc) or nil
     if bodies and bodies.frame then bodies.frame(pc,aim) end
     if combat then combat.input(pc,aim);bodies.combatFrame(pc) end
+    if C.role=='client' and C.scenario=='infiltrator_hunt' and combat and bodies and bodies.isReady(pc) then
+        local state=combat.state()
+        if state and state.missionPhase~='active' then missionPresentationFrozen=true end
+    end
     if movingUntil>os.time() and valid(pc) and valid(pc.Pawn) and pc.Pawn:IsLocallyControlled() then
         pc.Pawn:AddMovementInput({X=1,Y=0,Z=0},1.0,false)
     end
 end
 -- Fixed game-thread callbacks avoid creating/unreferencing Lua registry
 -- entries concurrently in LoopAsync + ExecuteInGameThread (UE4SS issue 1180).
-require('scheduler')(H,emit,context,update,input)
+local scheduler=require('scheduler')(H,emit,context,update,input,function()
+    missionPresentationFrozen=false;movingUntil=0;keyCommands={}
+    prototypeModeAddress=0;listenWorld=0;listenReadyAfter=0
+    for _,component in ipairs({prototype,bodies,combat}) do
+        if component and component.clearWorld then component.clearWorld() end
+    end
+end,function()return missionPresentationFrozen end)
 local function key(cmd)
     if #keyCommands<16 then keyCommands[#keyCommands+1]=cmd end
 end
@@ -218,8 +239,12 @@ NotifyOnNewObject('/Script/Engine.NetDriver', function(obj)
     emit('driver_created=' .. obj:GetFullName())
 end)
 RegisterHook('/Script/Engine.GameplayStatics:OpenLevel', function(_, _, level, absolute, options)
+    scheduler.beforeTravel()
     emit('OpenLevel level=' .. level:get():ToString() .. ' options=' .. options:get():ToString())
 end)
 RegisterHook('/Script/Engine.PlayerController:ClientTravelInternal', function(_, url)
+    -- A host may send travel RPCs to another controller without changing its
+    -- own world. Only the joining process suspends for this RPC.
+    if C.role=='client' then scheduler.beforeTravel() end
     emit('ClientTravelInternal url=' .. url:get():ToString())
 end)
