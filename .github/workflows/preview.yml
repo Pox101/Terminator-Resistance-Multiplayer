@@ -15,7 +15,7 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install -r tests/requirements.txt
       - run: python tests/run_rules.py
-      - run: cmd /c Build-Native.cmd
+      - run: cmd /c Build-Native.cmd tests
       - run: ./Package-Release.ps1
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:

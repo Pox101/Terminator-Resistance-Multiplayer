@@ -1,3 +1,14 @@
+# 0.3.0 — Steam menu and invitation preview
+
+Adds Play Versus below Infiltrator Mode in the original Play menu, without
+modifying game assets. It creates a private two-person Steam lobby and opens
+Steam's native friend invitation dialog. Includes lobby status, reinviting
+and leaving, plus native lifecycle and Lua status tests.
+
+This is an invitation UI preview. Invitation acceptance, joining a game and
+Steam Internet game transport remain unimplemented. Existing local gameplay
+and isolated copied saves remain the test path.
+
 # 0.2.0 — experimental Infiltrator mission takeover
 
 Preserves the native Infiltrator mission and lets a joining player control

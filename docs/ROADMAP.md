@@ -4,8 +4,10 @@
    original bunker guard. Verify native incoming weapon damage, death/quest
    callbacks, disconnect recovery and stability across fresh launches.
    Add more occupied NPC slots only after the one-defender test is reliable.
-2. Implement a Steam session and game-traffic transport using the authenticated
-   game context. Require relay-only routing for IP privacy where available.
+2. The Play Versus menu, private Steam lobby creation and native invitation
+   dialog are available as a UI preview. Implement invitation acceptance,
+   lobby joining, version/content negotiation and game-traffic transport using
+   the authenticated game context. Require relay-only routing for IP privacy where available.
    Test with separate authenticated peers; keep localhost as the test path.
 3. Replace/review the temporary combat RPC carrier and review the engine's
    inherited server RPCs. Add movement validation, abuse limits and version

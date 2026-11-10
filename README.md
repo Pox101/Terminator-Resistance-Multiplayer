@@ -67,6 +67,17 @@ not been play-tested.
 For the earlier arena test, start a co-op/PvP host, choose **Play → Continue**
 to use the copied save, then **Host loaded save** before joining player two.
 
+### Steam invitation preview
+
+In an isolated mod game, choose **Play → Play Versus**, below Infiltrator
+Mode. This creates a private two-person Steam lobby and opens Steam's friend
+invitation dialog. **Invite Friends** reopens that dialog; **Back** leaves
+the lobby. Steam must be running with the overlay enabled.
+
+This previews the menu and invitation flow only. Accepting an invitation,
+joining a match and carrying game traffic over Steam are not implemented.
+Use the launcher steps above for the existing two-instance local test.
+
 If automatic discovery fails, run:
 
 ```powershell

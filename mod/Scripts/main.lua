@@ -35,6 +35,7 @@ local bodies = prototype and C.fullBodies and require('bodies')(H,C,emit,prototy
 local combat = bodies and C.combatEnabled and require('combat')(H,C,emit,prototype,bodies) or nil
 local scenario=C.scenario=='infiltrator_hunt' and require('scenario_runtime')(H,C,emit) or nil
 local geometry=C.scenario=='infiltrator_hunt' and require('geometry_sync')(H,C,emit) or nil
+local versusMenu=require('versus_menu')(H,C,emit)
 local listenReadyAfter,listenWorld=0,0
 local function configureScenarioHosting()
     if C.role~='host' or C.scenario~='infiltrator_hunt' then return end
@@ -163,6 +164,7 @@ end
 local ticks = 0
 local keyCommands={}
 local function update()
+    versusMenu.update(context())
     configureLocalNetworking()
     configurePrototypePlayers()
     configureScenarioHosting()

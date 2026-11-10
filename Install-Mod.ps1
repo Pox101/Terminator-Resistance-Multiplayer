@@ -114,7 +114,7 @@ try {
                 if(-not ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -or (FullPath @($item.Target)[0]) -ne (FullPath $target)) {throw 'Existing content link does not match the game.'}
             } else {New-Item -ItemType Junction -Path $path -Target $target | Out-Null}
         }
-        foreach($name in 'prototype_runtime.dll','prototype_input.dll','steam_probe.dll') {
+        foreach($name in 'prototype_runtime.dll','prototype_input.dll','steam_probe.dll','steam_lobby.dll') {
             Copy-Item -LiteralPath (Join-Path $DestinationRoot "native\$name") -Destination $root -Force
         }
         Copy-Item -Path (Join-Path $DestinationRoot 'mod\Scripts\*.lua') -Destination (Join-Path $bin 'Mods\TRMPProbe\Scripts') -Force
