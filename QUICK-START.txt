@@ -1,12 +1,14 @@
 RESISTANCE MULTIPLAYER (TRMP) - FIRST PVP TEST
-Version 0.5.1-first-pvp-test | Windows / Steam | LOCAL TECHNICAL PREVIEW
+Version 0.6.0-steam-dev | Windows / Steam | DEVELOPMENT PREVIEW
 
 READ THIS FIRST
 This build connects TWO GAME INSTANCES ON ONE PC through localhost.
-It does not connect friends over the Internet or LAN. It is not split-screen
+Default launches use the validated local path. An opt-in Steam relay path is
+under development; separate-account Internet validation remains pending.
+See docs/STEAM-TEST.txt for its setup and limits. This is not split-screen
 or simultaneous two-controller couch PvP. One tester can switch between the
 two windows to check the two independently controlled characters.
-Steam invitation acceptance and Internet game transport are future work.
+The published 0.5.1 release remains local-only.
 
 WHAT YOU ARE TESTING
 The host plays the game's original Infiltrator mission. Player two controls

@@ -17,7 +17,7 @@ cl /nologo /std:c++17 /EHsc /LD /MT /Fo"native\prototype_input.obj" native\proto
 if errorlevel 1 goto failed
 cl /nologo /std:c++17 /EHsc /LD /MT /Fo"native\steam_probe.obj" native\steam_probe.cpp /link /OUT:"native\steam_probe.dll"
 if errorlevel 1 goto failed
-cl /nologo /std:c++17 /EHsc /LD /MT /Fo"native\steam_lobby.obj" native\steam_lobby.cpp /link /OUT:"native\steam_lobby.dll"
+cl /nologo /std:c++17 /EHsc /LD /MT /Fo"native\steam_lobby.obj" native\steam_lobby.cpp /link Ws2_32.lib /OUT:"native\steam_lobby.dll"
 if errorlevel 1 goto failed
 if /i "%~1"=="diagnostics" (
   cl /nologo /std:c++17 /EHsc /LD /MT /Fo"native\socket_trace.obj" native\socket_trace.cpp /link Ws2_32.lib /OUT:"native\trmp_trace.dll"
@@ -27,12 +27,16 @@ if /i "%~1"=="diagnostics" (
 )
 if /i "%~1"=="tests" (
   if not exist runtime\native-lobby-tests mkdir runtime\native-lobby-tests
-  cl /nologo /std:c++17 /EHsc /MT /Fo"runtime\native-lobby-tests\steam_lobby_test.obj" tests\steam_lobby_test.cpp /link /OUT:"runtime\native-lobby-tests\steam_lobby_test.exe"
+  cl /nologo /std:c++17 /EHsc /MT /Fo"runtime\native-lobby-tests\steam_lobby_test.obj" tests\steam_lobby_test.cpp /link Ws2_32.lib /OUT:"runtime\native-lobby-tests\steam_lobby_test.exe"
   if errorlevel 1 goto failed
   pushd runtime\native-lobby-tests
   steam_lobby_test.exe
   if errorlevel 1 goto failed
   popd
+  cl /nologo /std:c++17 /EHsc /MT /Fo"runtime\native-lobby-tests\steam_tunnel_test.obj" tests\steam_tunnel_test.cpp /link Ws2_32.lib /OUT:"runtime\native-lobby-tests\steam_tunnel_test.exe"
+  if errorlevel 1 goto failed
+  runtime\native-lobby-tests\steam_tunnel_test.exe
+  if errorlevel 1 goto failed
 )
 popd
 exit /b 0

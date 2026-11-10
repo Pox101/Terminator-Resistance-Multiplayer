@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Prerelease tag, for example v0.5.1-first-pvp-test
+        description: Tested prerelease tag (Steam development builds require separate-peer validation)
         required: true
         type: string
 permissions:

@@ -9,7 +9,8 @@ https://github.com/UE4SS-RE/RE-UE4SS/releases/tag/v3.0.1
 UE4SS remains covered by its own license and upstream notices.
 
 GameNetworkingSockets public interface headers by Valve Corporation are used
-to compile the optional Steam availability/local socket-pair diagnostic.
+to compile Steam availability diagnostics and the experimental authenticated
+Steam relay transport. Steam's runtime remains supplied by the installed game.
 The BSD license is included in licenses/GameNetworkingSockets-LICENSE.txt
 in binary releases and third_party/gamenetworkingsockets/LICENSE in source.
 Pinned upstream commit: d534c19aa760df3fb75fd20db13ba1932b8a5463.

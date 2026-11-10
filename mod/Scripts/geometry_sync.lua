@@ -19,9 +19,9 @@ return function(H,C,emit)
         if math.abs(length-1)>0.001 then return nil end
         return name,values
     end
-    if C.role=='client' then
+    if C.role=='client' or C.transport=='steam' then
         RegisterHook('/Script/Engine.PlayerController:ClientMessage',function(context,message,kind)
-            if kind:get():ToString()~='TRMPG' or context:get():GetAddress()~=localControllerAddress then return end
+            if C.role~='client' or kind:get():ToString()~='TRMPG' or context:get():GetAddress()~=localControllerAddress then return end
             local text=message:get():ToString();local name,values=decode(text)
             if name and (not states[name] or states[name].key~=text) then states[name]={key=text,values=values,phase='pending'} end
         end)

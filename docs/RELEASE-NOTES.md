@@ -1,3 +1,22 @@
+# 0.6.0-steam-dev — experimental invitation and relay transport
+
+Adds accepted-invite callback handling, asynchronous lobby joining, owner/member
+authorization and code/content compatibility checks. A running isolated mod
+can switch from host to defender at the menu. The Versus panel starts the
+original Infiltrator flow; native mission objectives are preserved.
+
+Adds an authenticated/encrypted relay-only SteamNetworkingSockets UDP tunnel
+with bounded frames/rates, a version/content/lobby handshake and restart
+generations. The engine remains on loopback. Native restart metadata can be
+carried by the lobby. Unsupported relay setup fails without direct-IP fallback.
+
+Includes deterministic lifecycle/authorization tests and a developer local
+Steam socket-pair mode for exercising actual two-instance game traffic.
+Separate-account invitation delivery and Internet/real-peer privacy validation
+remain pending. Recipients must run the isolated mod before accepting invites;
+cold Steam launches of the original game are not redirected. There is no host
+migration. This is not an Internet-ready public release; 0.5.1 stays local-only.
+
 # 0.5.1 — first public local PvP technical test
 
 Corrects the defender's result text: Infiltrator completion means Resistance

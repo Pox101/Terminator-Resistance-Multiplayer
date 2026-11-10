@@ -5,9 +5,11 @@ instances on one Windows PC. The Infiltrator experiment keeps the original
 mission: the host plays the native Infiltrator, while player two takes
 control of an existing Resistance soldier in the selected bunker.
 
-**This release connects two instances on one Windows PC. Steam Internet
-matches are not implemented. It is a development preview, not finished
-campaign co-op or a competitive multiplayer release.**
+**The public 0.5.1 release connects two instances on one Windows PC. This
+development branch adds experimental Steam invite acceptance and relay
+transport, but separate-account Internet validation remains pending.**
+See [the Steam development test guide](docs/STEAM-TEST.txt). Default launches
+still use localhost. Campaign co-op and competitive multiplayer are unfinished.
 
 Download the [first public local PvP test](https://github.com/Pox101/Terminator-Resistance-Multiplayer/releases/tag/v0.5.1-first-pvp-test)
 ([installer ZIP](https://github.com/Pox101/Terminator-Resistance-Multiplayer/releases/download/v0.5.1-first-pvp-test/TRMP-0.5.1-first-pvp-test.zip)).
@@ -97,9 +99,11 @@ Mode. This creates a private two-person Steam lobby and opens Steam's friend
 invitation dialog. **Invite Friends** reopens that dialog; **Back** leaves
 the lobby. Steam must be running with the overlay enabled.
 
-This previews the menu and invitation flow only. Accepting an invitation,
-joining a match and carrying game traffic over Steam are not implemented.
-Use the launcher steps above for the existing two-instance local test.
+In the published 0.5.1 this previews the menu/invitation flow only. Development
+0.6 adds an opt-in Steam Versus path with invite acceptance, lobby checks and
+relay transport. Separate-peer Internet validation is pending; see
+[STEAM-TEST.txt](docs/STEAM-TEST.txt). Use the default launcher steps above for
+the existing two-instance local test.
 
 If automatic discovery fails, run:
 

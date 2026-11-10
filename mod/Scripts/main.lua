@@ -35,9 +35,19 @@ local bodies = prototype and C.fullBodies and require('bodies')(H,C,emit,prototy
 local combat = bodies and C.combatEnabled and require('combat')(H,C,emit,prototype,bodies) or nil
 local scenario=C.scenario=='infiltrator_hunt' and require('scenario_runtime')(H,C,emit) or nil
 local geometry=C.scenario=='infiltrator_hunt' and require('geometry_sync')(H,C,emit) or nil
-local versusMenu=require('versus_menu')(H,C,emit)
-local session=C.scenario=='infiltrator_hunt' and require('restart_session')(H,C,emit,context) or nil
 local listenReadyAfter,listenWorld=0,0
+local online,session
+if C.transport=='steam' or C.transport=='tunnel_test' then
+    online=require('steam_session')(H,C,emit,context,function(role)
+        if C.role==role then return end
+        C.role=role;prototypeModeAddress=0;listenWorld=0;listenReadyAfter=0
+        if session then session.onTravel('role_changed') end
+        for _,component in ipairs({prototype,bodies,combat}) do if component and component.clearWorld then component.clearWorld() end end
+        emit('steam_player_role='..role)
+    end)
+end
+local versusMenu=require('versus_menu')(H,C,emit,online)
+session=C.scenario=='infiltrator_hunt' and require('restart_session')(H,C,emit,context,C.transport=='steam' and online or nil) or nil
 local function configureScenarioHosting()
     if C.role~='host' or C.scenario~='infiltrator_hunt' then return end
     local pc=context()
@@ -142,8 +152,9 @@ local function command(cmd)
         emit('host_requested=' .. level)
         gs:OpenLevel(pc, FName(level), true, 'listen?port=7777')
     elseif cmd == 'join' then
-        emit('join_requested=127.0.0.1:7777')
-        H.GetKismetSystemLibrary():ExecuteConsoleCommand(pc, 'open 127.0.0.1:7777', pc)
+        local port=(C.transport=='steam' or C.transport=='tunnel_test') and 7778 or 7777
+        emit('join_requested=127.0.0.1:'..port)
+        H.GetKismetSystemLibrary():ExecuteConsoleCommand(pc, 'open 127.0.0.1:'..port, pc)
     elseif cmd:sub(1,4) == 'map ' then
         local level = cmd:sub(5)
         assert(level:match('^/Game/[%w_/]+$'), 'Invalid map path')
@@ -184,6 +195,7 @@ local function pollCommands(ended)
     end
 end
 local function update()
+    if online and online.update() then return end
     if session then
         session.update()
         if session.blocked() then pollCommands(true);return end
@@ -207,6 +219,7 @@ local function update()
     if ticks%50==0 then snapshot() end
 end
 local function input()
+    if online then online.frame() end
     if session and session.blocked() then return end
     if missionPresentationFrozen then return end
     local pc=context()
@@ -225,6 +238,7 @@ end
 -- entries concurrently in LoopAsync + ExecuteInGameThread (UE4SS issue 1180).
 local scheduler=require('scheduler')(H,emit,context,update,input,function(reason)
     if session then session.onTravel(reason) end
+    if versusMenu.clearWorld then versusMenu.clearWorld() end
     missionPresentationFrozen=false;movingUntil=0;keyCommands={}
     prototypeModeAddress=0;listenWorld=0;listenReadyAfter=0
     for _,component in ipairs({prototype,bodies,combat}) do

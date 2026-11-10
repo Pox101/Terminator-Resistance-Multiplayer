@@ -1,6 +1,7 @@
 TRMP FIRST PVP TEST - FEEDBACK
 
-Mod version: 0.5.1-first-pvp-test
+Mod version: 0.6.0-steam-dev (use the actual package version)
+Transport: default loopback / experimental Steam / developer tunnel_test
 Windows version:
 CPU / RAM / GPU:
 Game edition / installed DLC:

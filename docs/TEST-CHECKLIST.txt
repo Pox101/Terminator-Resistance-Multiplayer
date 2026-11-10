@@ -1,4 +1,4 @@
-TRMP 0.5.1-first-pvp-test - LOCAL TEST CHECKLIST
+TRMP 0.6.0-steam-dev - DEFAULT LOCAL TEST CHECKLIST
 
 Record Windows version, GPU/RAM, mod version and exact game build first.
 Use QUICK-START.txt. Two instances on one PC; switch window focus to control
@@ -26,3 +26,5 @@ Only mark checks you actually performed. Report not tested separately from
 failed. Original mission completion takes a normal playthrough; local developer
 integration coverage also used an accelerated native ending fixture.
 For problems, include the first failing step and use FEEDBACK-TEMPLATE.txt.
+For the separate experimental Steam path, follow STEAM-TEST.txt. A local
+socket-pair result is not a completed Internet test.

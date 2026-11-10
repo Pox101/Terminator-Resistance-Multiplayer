@@ -1,4 +1,4 @@
-param([ValidateSet('host','client')][string]$Role = 'host', [string]$Map)
+param([ValidateSet('host','client')][string]$Role = 'host', [string]$Map,[ValidatePattern('^[0-9]{1,20}$')][string]$LobbyId)
 $ErrorActionPreference = 'Stop'
 $root = Join-Path $PSScriptRoot "runtime\$Role"
 $exe = Join-Path $root 'Terminator\Binaries\Win64\Terminator-Win64-Shipping.exe'
@@ -11,6 +11,32 @@ if (-not (Test-Path -LiteralPath (Join-Path $root 'prototype_runtime.dll'))) { t
 if (-not (Test-Path -LiteralPath (Join-Path $root 'prototype_input.dll'))) { throw 'Run Build-Native.cmd and Prepare-Test.ps1 first.' }
 $existing = Get-Process -Name 'Terminator-Win64-Shipping' -ErrorAction SilentlyContinue | Where-Object Path -EQ $exe
 if ($existing) { throw "$Role is already running." }
+$config=Get-Content -LiteralPath (Join-Path $root 'Terminator\Binaries\Win64\Mods\TRMPProbe\Scripts\config.lua') -Raw
+$transport='loopback'
+if($config -match "transport='(steam|tunnel_test)'"){$transport=$Matches[1]}
+[IO.File]::WriteAllText((Join-Path $root 'network-mode.txt'),$transport)
+if($transport -ne 'loopback') {
+    $pakRoot=Join-Path $root 'Terminator\Content\Paks'
+    [string[]]$pakEntries=@(Get-ChildItem -LiteralPath $pakRoot -File -Recurse -Filter '*.pak' | ForEach-Object {
+        $_.FullName.Substring($pakRoot.Length+1).Replace('\','/').ToLowerInvariant()+':'+$_.Length
+    })
+    if(-not $pakEntries.Count){throw 'Installed game content was not found.'}
+    [Array]::Sort($pakEntries,[StringComparer]::Ordinal)
+    $scriptRoot=Join-Path $root 'Terminator\Binaries\Win64\Mods\TRMPProbe\Scripts'
+    [string[]]$modEntries=@(Get-ChildItem -LiteralPath $scriptRoot -File -Filter '*.lua' | Where-Object Name -NE 'config.lua' | ForEach-Object {
+        $_.Name.ToLowerInvariant()+':'+(Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash
+    })
+    foreach($name in 'prototype_runtime.dll','prototype_input.dll','steam_lobby.dll','steam_probe.dll'){
+        $modEntries+=$name+':'+(Get-FileHash -LiteralPath (Join-Path $root $name) -Algorithm SHA256).Hash
+    }
+    [Array]::Sort($modEntries,[StringComparer]::Ordinal)
+    $bytes=[Text.Encoding]::UTF8.GetBytes($expectedHash+"`n"+($pakEntries -join "`n")+"`n"+($modEntries -join "`n"))
+    $sha=[Security.Cryptography.SHA256]::Create()
+    try{$fingerprint=([BitConverter]::ToString($sha.ComputeHash($bytes))).Replace('-','').ToLowerInvariant()}finally{$sha.Dispose()}
+    [IO.File]::WriteAllText((Join-Path $root 'content-fingerprint.txt'),$fingerprint)
+}
+$inviteFile=Join-Path $root 'steam-invite.txt'
+if($LobbyId){[IO.File]::WriteAllText($inviteFile,$LobbyId)}elseif(Test-Path -LiteralPath $inviteFile){Remove-Item -LiteralPath $inviteFile}
 if (Test-Path -LiteralPath (Join-Path $root 'command.txt')) {
     Move-Item -LiteralPath (Join-Path $root 'command.txt') -Destination (Join-Path $root ('stale-command-' + (Get-Date -Format 'yyyyMMdd-HHmmss-fff') + '.txt'))
 }

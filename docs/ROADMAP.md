@@ -3,13 +3,14 @@
 1. Native incoming weapon damage, defender death and the original ending flow
    have local integration coverage. Verify a normal full-length Infiltrator
    playthrough, disconnect recovery and repeated travel across fresh launches.
-   Native Restart Mission now has local disconnect/rejoin recovery; extend
-   its session-generation provider to Steam and verify it across machines.
+   Native Restart Mission now has local recovery and a development lobby
+   session provider. Verify the new provider across independent Steam peers.
    Add more occupied NPC slots only after the one-defender test is reliable.
 2. The Play Versus menu, private Steam lobby creation and native invitation
-   dialog are available as a UI preview. Implement invitation acceptance,
-   lobby joining, version/content negotiation and game-traffic transport using
-   the authenticated game context. Require relay-only routing for IP privacy where available.
+   dialog are public as a local UI preview. Development code now adds invite
+   acceptance, lobby joining, compatibility gates and relay-only transport.
+   Validate the complete path between separate authenticated peers; audit
+   cold-start behavior and disconnection handling before an online release.
    Test with separate authenticated peers; keep localhost as the test path.
 3. Replace/review the temporary combat RPC carrier and review the engine's
    inherited server RPCs. Add movement validation, abuse limits and version

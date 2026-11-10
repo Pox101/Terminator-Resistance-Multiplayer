@@ -1,8 +1,8 @@
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include "steam_tunnel.hpp"
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
+namespace online {bool ready();}
 
 // Uses the installed game's Steam API. Opening the invite dialog does not
 // send invitations. The user chooses recipients in Steam's own overlay.
@@ -41,7 +41,7 @@ Enabled overlayEnabled;
 void writeState(){
  char path[MAX_PATH];sprintf_s(path,"%ssteam-lobby-state.txt",directory);
  FILE* f=nullptr;fopen_s(&f,path,"w");
- if(f){fprintf(f,"TRMP_LOBBY1|%s|%d|%u|%llu|0\n",state,error,members,(unsigned long long)lobby);fclose(f);}
+ if(f){fprintf(f,"TRMP_LOBBY1|%s|%d|%u|%llu|%d\n",state,error,members,(unsigned long long)lobby,online::ready()?1:0);fclose(f);}
 }
 bool initialize(){
  if(matchmaking)return true;
@@ -80,16 +80,26 @@ void openInvite(){
  overlay(friends,lobby);state="lobby_ready";error=0;invitePending=false;writeState();
 }
 }
-extern "C" __declspec(dllexport) int lobby_create(void*){
+#include "steam_online.hpp"
+extern "C" __declspec(dllexport) int lobby_initialize(void*){if(initialize())online::configure();return 0;}
+extern "C" __declspec(dllexport) int lobby_accept(void*){online::accept();return 0;}
+extern "C" __declspec(dllexport) int lobby_frame(void*){online::frame();return 0;}
+extern "C" __declspec(dllexport) int lobby_publish_session(void*){online::publish();return 0;}
+extern "C" __declspec(dllexport) int lobby_test_tunnel(void*){if(initialize())online::testTunnel();return 0;}
+static int createWithInvite(bool invite){
  if(!initialize())return 0;
- invitePending=true;
+ online::configure();
+ if(online::enabled)online::writeFile("steam-role.txt","host\n");
+ invitePending=invite;
  cancelPending=false;
- if(lobby){openInvite();return 0;}
+ if(lobby){if(invite)openInvite();return 0;}
  if(creation)return 0;
  // k_ELobbyTypePrivate=0; two total members for the current 1v1 prototype.
  creation=createLobby(matchmaking,0,2);state=creation?"creating":"create_failed";error=creation?0:6;
  writeState();return 0;
 }
+extern "C" __declspec(dllexport) int lobby_create(void*){return createWithInvite(true);}
+extern "C" __declspec(dllexport) int lobby_create_quiet(void*){return createWithInvite(false);}
 extern "C" __declspec(dllexport) int lobby_poll(void*){
  if(!matchmaking)return 0;
  if(creation){
@@ -106,17 +116,20 @@ extern "C" __declspec(dllexport) int lobby_poll(void*){
     bool tagged=setData(matchmaking,lobby,"trmp_mod","resistance-multiplayer") &&
        setData(matchmaking,lobby,"trmp_protocol","TRMP1") &&
        setData(matchmaking,lobby,"trmp_mode","infiltrator-versus") &&
-       setData(matchmaking,lobby,"trmp_transport","unavailable");
+       setData(matchmaking,lobby,"trmp_transport",online::enabled?"steam-sdr-udp1":"unavailable");
+    if(tagged&&online::enabled)tagged=online::created();
     if(tagged){state="lobby_ready";error=0;}
-    else {leaveLobby(matchmaking,lobby);lobby=0;state="create_failed";error=7;invitePending=false;}
+    else {online::clearTransport();leaveLobby(matchmaking,lobby);lobby=0;state="create_failed";error=7;invitePending=false;}
    }else {state="create_failed";error=received?response.result:8;invitePending=false;}
   }
  }
  if(lobby){members=(unsigned)getMembers(matchmaking,lobby);if(invitePending)openInvite();}
+ online::poll();
  writeState();return 0;
 }
 extern "C" __declspec(dllexport) int lobby_invite(void*){if(initialize()){invitePending=true;if(lobby)openInvite();}return 0;}
 extern "C" __declspec(dllexport) int lobby_leave(void*){
+ online::cancel();
  if(lobby && matchmaking)leaveLobby(matchmaking,lobby);
  lobby=0;members=0;invitePending=false;state="idle";error=0;
  cancelPending=creation!=0;

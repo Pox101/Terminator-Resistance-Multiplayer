@@ -20,10 +20,8 @@ return function(H, C, emit)
     local initialize, err
     local sampleInput, inputError = package.loadlib(C.directory .. '/prototype_input.dll', 'sample_input')
     assert(sampleInput, 'Build and copy prototype_input.dll: ' .. tostring(inputError))
-    if C.role == 'client' then
-        initialize, err = package.loadlib(C.directory .. '/prototype_runtime.dll', 'initialize_local')
-        assert(initialize, 'Run Build-Native.cmd and Prepare-Test.ps1: ' .. tostring(err))
-    end
+    initialize, err = package.loadlib(C.directory .. '/prototype_runtime.dll', 'initialize_local')
+    assert(initialize, 'Run Build-Native.cmd and Prepare-Test.ps1: ' .. tostring(err))
     local function keyboardState()
         if not processId then
             local pidFile = assert(io.open(C.directory .. '/process-id.txt', 'r'))
@@ -96,7 +94,7 @@ return function(H, C, emit)
         inputController = pc
         emit('selective_local_begin_play_requested=true pawn=' .. pawn:GetFullName())
     end
-    if C.role == 'client' then
+    if C.role == 'client' or C.transport=='steam' then
         for _, name in ipairs({'W','A','S','D'}) do
             RegisterKeyBind(Key[name], function()
                 keyTaps[name]=true
