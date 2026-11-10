@@ -9,8 +9,6 @@ if C.nativeHudGuard then
     assert(guard, 'Build and copy controller_guard.dll before launching: ' .. tostring(err))
     guard()
 end
-local pending = false
-local executing = false
 local movingUntil = 0
 local driverConfigured = false
 local prototypeModeAddress = 0
@@ -133,6 +131,9 @@ local function command(cmd)
         local chunk = assert(loadfile(C.directory .. '/experiment.lua'))
         chunk()(H, C, emit, pc)
     elseif cmd == 'host' or cmd == 'host-menu' then
+        if C.scenario=='infiltrator_hunt' then
+            emit('host_automatic=original_mission_is_hosted_in_place_after_intro');return
+        end
         local level = pc:GetWorld():GetFullName():match('World ([^%.]+)%.')
         assert(level, 'Could not resolve current map')
         if cmd ~= 'host-menu' and (level:lower():find('menu') or level:find('MAP_StartingMap')) then emit('host_rejected=load_gameplay_level_first'); return end
@@ -160,64 +161,43 @@ local function command(cmd)
     else emit('unknown_command=' .. cmd) end
 end
 local ticks = 0
-LoopAsync(100, function()
-    if pending then return false end
-    pending = true
-    ExecuteInGameThread(function()
-        if executing then pending=false;return end
-        executing=true
-        local ok, err = pcall(function()
-            configureLocalNetworking()
-            configurePrototypePlayers()
-            configureScenarioHosting()
-            if scenario then scenario.update(context()) end
-            if geometry then geometry.update(context()) end
-            if prototype then prototype.update(context()) end
-            if bodies then bodies.update(context()) end
-            if combat then combat.update(context()) end
-            local f = io.open(C.directory .. '/command.txt', 'r')
-            if f and valid(context()) then
-                local cmd = f:read('*a'):match('^%s*(.-)%s*$'); f:close()
-                os.remove(C.directory .. '/command.txt')
-                if cmd ~= '' then command(cmd) end
-            elseif f then f:close() end
-            ticks = ticks + 1
-            if ticks % 50 == 0 then snapshot() end
-        end)
-        if not ok then emit('probe_error=' .. tostring(err)) end
-        executing=false;pending = false
-    end)
-    return false
-end)
-local inputPending = false
-LoopAsync(16, function()
-    if inputPending then return false end
-    inputPending = true
-    ExecuteInGameThread(function()
-        if executing then inputPending=false;return end
-        executing=true
-        local ok, err = pcall(function()
-            local pc = context()
-            local aim=prototype and prototype.input(pc) or nil
-            if bodies and bodies.frame then bodies.frame(pc,aim) end
-            if combat then combat.input(pc,aim);bodies.combatFrame(pc) end
-            if movingUntil > os.time() and valid(pc) and valid(pc.Pawn) and pc.Pawn:IsLocallyControlled() then
-                pc.Pawn:AddMovementInput({X=1,Y=0,Z=0}, 1.0, false)
-            end
-        end)
-        if not ok then emit('input_error=' .. tostring(err)) end
-        executing=false;inputPending = false
-    end)
-    return false
-end)
+local keyCommands={}
+local function update()
+    configureLocalNetworking()
+    configurePrototypePlayers()
+    configureScenarioHosting()
+    if scenario then scenario.update(context()) end
+    if geometry then geometry.update(context()) end
+    if prototype then prototype.update(context()) end
+    if bodies then bodies.update(context()) end
+    if combat then combat.update(context()) end
+    local f=io.open(C.directory..'/command.txt','r')
+    if f and valid(context()) then
+        local cmd=f:read('*a'):match('^%s*(.-)%s*$');f:close()
+        os.remove(C.directory..'/command.txt')
+        if cmd~='' then command(cmd) end
+    elseif f then f:close() end
+    local queued=keyCommands;keyCommands={}
+    if not prototype or prototype.isFocused() then
+        for _,cmd in ipairs(queued) do command(cmd) end
+    end
+    ticks=ticks+1
+    if ticks%50==0 then snapshot() end
+end
+local function input()
+    local pc=context()
+    local aim=prototype and prototype.input(pc) or nil
+    if bodies and bodies.frame then bodies.frame(pc,aim) end
+    if combat then combat.input(pc,aim);bodies.combatFrame(pc) end
+    if movingUntil>os.time() and valid(pc) and valid(pc.Pawn) and pc.Pawn:IsLocallyControlled() then
+        pc.Pawn:AddMovementInput({X=1,Y=0,Z=0},1.0,false)
+    end
+end
+-- Fixed game-thread callbacks avoid creating/unreferencing Lua registry
+-- entries concurrently in LoopAsync + ExecuteInGameThread (UE4SS issue 1180).
+require('scheduler')(H,emit,context,update,input)
 local function key(cmd)
-    ExecuteInGameThread(function()
-        local ok, err = pcall(function()
-            if prototype and not prototype.isFocused() then return end
-            command(cmd)
-        end)
-        if not ok then emit('command_error=' .. tostring(err)) end
-    end)
+    if #keyCommands<16 then keyCommands[#keyCommands+1]=cmd end
 end
 RegisterKeyBind(Key.F6, function() key('host') end)
 RegisterKeyBind(Key.F7, function() key('join') end)

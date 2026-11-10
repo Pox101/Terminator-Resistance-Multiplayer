@@ -5,6 +5,7 @@ return function(H, C, emit)
     local hostInputReady = {}
     local candidate, readyAfter = 0, 0
     local inputController, processId, pressUntil = nil, nil, {}
+    local keyTaps={}
     local lastInputTime, wasFocused = nil, false
     local mouseX, mouseY = {KeyName=FName('MouseX')}, {KeyName=FName('MouseY')}
     local aimState = {focused=false, aiming=false, dt=0}
@@ -98,16 +99,7 @@ return function(H, C, emit)
     if C.role == 'client' then
         for _, name in ipairs({'W','A','S','D'}) do
             RegisterKeyBind(Key[name], function()
-                ExecuteInGameThread(function()
-                    local pc = inputController
-                    if not valid(pc) or not valid(pc.Pawn) or not pc.Pawn:IsLocallyControlled() then return end
-                    -- UE4SS's window-class focus check accepts another game
-                    -- instance too. Require this process's actual foreground PID.
-                    if not keyboardState() then return end
-                    -- Preserve short taps that arrive between input polling frames.
-                    pressUntil[name] = H.GetGameplayStatics():GetRealTimeSeconds(pc)+0.10
-                    emit('prototype_key=' .. name)
-                end)
+                keyTaps[name]=true
             end)
         end
     end
@@ -125,7 +117,9 @@ return function(H, C, emit)
         lastInputTime=now
         aimState.dt=dt; aimState.focused=focused
         aimState.aiming=focused and math.floor(mask/16)%2==1
-        if not focused then wasFocused=false; pressUntil={}; return aimState end
+        if not focused then wasFocused=false;pressUntil={};keyTaps={};return aimState end
+        for name in pairs(keyTaps) do pressUntil[name]=now+0.10 end
+        keyTaps={}
         local x=pc:GetInputAnalogKeyState(mouseX)
         local y=pc:GetInputAnalogKeyState(mouseY)
         if wasFocused and (x~=0 or y~=0) then

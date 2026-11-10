@@ -7,6 +7,8 @@ remain native; there are no added round rules or player respawns.
 
 Adds safe client character mirrors, bunker transform synchronization and
 player aiming/damage using the original soldier rifle configuration.
+Uses a fixed game-thread scheduler and queued key input after an observed
+UE4SS Lua callback crash; no recurring async callback scheduling is required.
 Local tests cover connection, takeover, native damage and interior placement.
 Full mission completion, long-session stability, native weapon animation and
 additional defenders are not yet validated. The client uses placeholder visuals.

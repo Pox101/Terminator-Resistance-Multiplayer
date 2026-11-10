@@ -13,7 +13,11 @@ return function(H,C,emit)
         if preparedWorld~=world:GetAddress() then mirrors={};npcState=nil;nextScan=0;preparedWorld=world:GetAddress() end
         pc.Pawn:SetReplicates(false)
         local state=H.GetGameplayStatics():GetGameState(pc)
-        if valid(state) then state.bReplicatedHasBegunPlay=false;state:SetReplicates(false) end
+        -- Preserve the authority's begun-play state: newly spawned input
+        -- characters and native weapons must initialize normally on the host.
+        -- Suppressing this actor's replication keeps client world-wide
+        -- BeginPlay disabled without changing the host's mission lifecycle.
+        if valid(state) then state:SetReplicates(false) end
         for _,npc in ipairs(FindAllOf('AICharacter') or {}) do if activeNpc(npc) then npc:SetReplicates(false) end end
     end
     local function makeMirror(pc,source,playerState)

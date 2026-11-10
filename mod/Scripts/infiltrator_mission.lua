@@ -54,6 +54,10 @@ return function(H,C,emit,prototype,bodies)
         pawn.CapsuleComponent:SetCollisionResponseToAllChannels(0)
         pawn.CapsuleComponent:SetCollisionResponseToChannel(0,2);pawn.CapsuleComponent:SetCollisionResponseToChannel(1,2)
         pawn.CapsuleComponent:SetCollisionObjectType(1)
+        -- The input capsule and original soldier occupy the same position.
+        -- Ignore only that actor during movement sweeps; weapon traces still
+        -- hit the original soldier and retain native hit/death handling.
+        pawn.CapsuleComponent:IgnoreActorWhenMoving(npc,true)
         local pos=npc:K2_GetActorLocation();pawn:K2_SetActorLocation(pos,false,{},true)
         controller:ClientSetLocation(pos,npc:K2_GetActorRotation());pawn.CharacterMovement.MaxWalkSpeed=320
         if _G.TRMPScenarioRuntime then _G.TRMPScenarioRuntime.setControlled(npc) end
@@ -105,6 +109,7 @@ return function(H,C,emit,prototype,bodies)
                 stop(p)
                 local hp=nativeHealth(p.native)
                 if p.faction=='human' and hp and hp.Health>0 then
+                    if valid(p.pawn) then p.pawn.CapsuleComponent:IgnoreActorWhenMoving(p.native,false) end
                     p.native.GameplayComponent.bSpawnableOwner=true;p.native.CharacterMovement:SetMovementMode(1,0)
                     if valid(p.native.Controller) and valid(p.native.Controller.BrainComponent) then p.native.Controller.BrainComponent:RestartLogic() end
                     if _G.TRMPScenarioRuntime then _G.TRMPScenarioRuntime.setControlled(p.native,false) end

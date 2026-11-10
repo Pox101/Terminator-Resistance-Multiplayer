@@ -226,19 +226,15 @@ return function(H,C,emit,prototype)
             emit('infiltrator_vision='..tostring(vision))
         end
     end
+    local keyCommands={}
     for key,name in pairs({F5='view',V='vision'}) do
         RegisterKeyBind(Key[key],function()
-            ExecuteInGameThread(function()
-                local ok,err=pcall(function()
-                    if not prototype.isFocused() then return end
-                    local engine=FindFirstOf('GameEngine')
-                    command(H.GetGameplayStatics():GetPlayerController(engine.GameViewport,0),name)
-                end)
-                if not ok then emit('body_key_error='..tostring(err)) end
-            end)
+            if #keyCommands<16 then keyCommands[#keyCommands+1]=name end
         end)
     end
     local function update(pc)
+        local queued=keyCommands;keyCommands={}
+        if prototype.isFocused() then for _,name in ipairs(queued) do command(pc,name) end end
         if C.scenario=='infiltrator_hunt' and C.role=='host' then return end
         stage='check world'
         if not valid(pc) or not valid(pc.Pawn) then return end

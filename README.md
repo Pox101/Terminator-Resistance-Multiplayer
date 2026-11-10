@@ -10,8 +10,10 @@ matches are not implemented. It is a development preview, not finished
 campaign co-op or a competitive multiplayer release.**
 
 Stability is experimental. Native client initialization required safe visual
-mirrors, and an RPC callback stalled during an extended test. The callback
-was revised; longer sessions and complete mission playthroughs remain unverified.
+mirrors. A crash dump identified a fault inside UE4SS Lua callback handling;
+recurring asynchronous scheduling was replaced by a fixed game-thread callback
+and a local deadline queue. Longer sessions and complete mission playthroughs
+remain unverified. See [the related UE4SS issue](https://github.com/UE4SS-RE/RE-UE4SS/issues/1180).
 
 ## Infiltrator mission experiment
 

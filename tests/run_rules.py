@@ -30,3 +30,6 @@ lua.globals().package.loaded["combat_rules"] = rules
 weapon = compile_lua((root / "mod/Scripts/npc_weapon.lua").read_text(), "npc_weapon.lua")()
 weapon_tests = compile_lua((root / "tests/npc_weapon_test.lua").read_text(), "npc_weapon_test.lua")()
 print(f"PASS: {weapon_tests(weapon)} native rifle authority/cover checks")
+scheduler = compile_lua((root / "mod/Scripts/scheduler.lua").read_text(), "scheduler.lua")()
+scheduler_tests = compile_lua((root / "tests/scheduler_test.lua").read_text(), "scheduler_test.lua")()
+print(f"PASS: {scheduler_tests(scheduler)} game-thread scheduling/travel/reentry checks")
