@@ -1,4 +1,4 @@
-param([string]$Version='0.5.0-restart-hands-preview')
+param([string]$Version='0.5.1-first-pvp-test')
 $ErrorActionPreference='Stop'
 if($Version -notmatch '^[0-9A-Za-z][0-9A-Za-z.-]{0,60}$'){throw 'Invalid version.'}
 $dist=Join-Path $PSScriptRoot 'dist'
@@ -8,6 +8,7 @@ New-Item -ItemType Directory -Path $stage | Out-Null
 $files=@('Install-Mod.ps1','Install-Mod.cmd','Launch-Mod.ps1','Launch-Mod.cmd','Start-Test.ps1','Send-TestCommand.ps1','README.md','LICENSE','THIRD-PARTY-NOTICES.txt',
     'mod/Scripts/main.lua','mod/Scripts/prototype.lua','mod/Scripts/bodies.lua','mod/Scripts/combat.lua','mod/Scripts/combat_rules.lua','mod/Scripts/scenario_rules.lua','mod/Scripts/scenario_runtime.lua','mod/Scripts/mission_rules.lua','mod/Scripts/infiltrator_mission.lua','mod/Scripts/geometry_sync.lua','mod/Scripts/npc_weapon.lua','mod/Scripts/scheduler.lua','mod/Scripts/lobby_state.lua','mod/Scripts/versus_menu.lua',
     'mod/Scripts/session_rules.lua','mod/Scripts/restart_session.lua',
+    'QUICK-START.txt','docs/TEST-CHECKLIST.txt','docs/FEEDBACK-TEMPLATE.txt',
     'native/prototype_runtime.dll','native/prototype_input.dll','native/steam_probe.dll','native/steam_lobby.dll')
 $manifest=@(foreach($relative in $files) {
     $source=Join-Path $PSScriptRoot $relative

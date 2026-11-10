@@ -2,6 +2,7 @@
 -- They never replace possession, movement replication, or the saved game pawn.
 return function(H,C,emit,prototype)
     local Scenario=require('scenario_rules')
+    local Mission=require('mission_rules')
     local bodies, assets = {}, {}
     local worldAddress, readyAfter, nextUpdate = 0, 0, 0
     local camera, cameraPawn, thirdPerson, vision = nil, nil, true, false
@@ -429,10 +430,11 @@ return function(H,C,emit,prototype)
                 message=message..'\nYour soldier is dead.'
                 if combatView.missionPhase=='active' then message=message..' The original mission continues.' end
             end
-            if combatView.missionPhase=='completed' then
-                message=message..'\nMISSION COMPLETE — the Infiltrator finished its original objectives.'
-            elseif combatView.missionPhase=='failed' then
-                message=message..'\nMISSION ENDED — the Infiltrator was stopped or the native mission failed.'
+            local result=Mission.outcome(combatView.missionPhase,own.faction)
+            if result=='fail' then
+                message=message..'\nMISSION FAILED — the Infiltrator completed its objectives.'
+            elseif result=='success' then
+                message=message..'\nMISSION SUCCESS — the Infiltrator was stopped.'
             end
         end
         if round then

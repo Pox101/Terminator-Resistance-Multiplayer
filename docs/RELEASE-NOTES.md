@@ -1,3 +1,17 @@
+# 0.5.1 — first public local PvP technical test
+
+Corrects the defender's result text: Infiltrator completion means Resistance
+MISSION FAILED; native Infiltrator failure means Resistance MISSION SUCCESS.
+The wire phase still describes the original Infiltrator mission. Native host
+summary, mission objectives and death callbacks remain unchanged.
+
+Adds a player quick start, test checklist, feedback template and a separate
+Steam Community post draft. Explicitly identifies the build as two instances
+on one PC with focused-window control, not Internet/LAN, split-screen or
+simultaneous two-controller play. Steam invite acceptance and Internet game
+transport remain future work. The public post/download are prepared locally;
+creating a public release or submitting a community post is a separate action.
+
 # 0.5.0 — mission restart and Resistance hands preview
 
 Keeps the original Restart Mission call and tracks local session generations.

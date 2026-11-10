@@ -1,0 +1,40 @@
+TITLE:
+[Mod prototype] Infiltrator vs Resistance - first local PvP technical test
+
+BODY (Steam formatting; replace DOWNLOAD_LINK before posting):
+
+[h2]Resistance Multiplayer (TRMP) - first PvP prototype[/h2]
+I'm sharing an early, unofficial multiplayer experiment for Terminator: Resistance.
+
+[b]This download is a LOCAL technical preview: two game instances on ONE PC. Internet/LAN matches and accepting Steam invites into a match are not implemented yet. It is not split-screen or simultaneous two-controller couch PvP. One tester can switch between the two windows to test both characters.[/b]
+
+[h3]The scenario[/h3]
+The host plays the original Infiltrator mission. A second player instance takes control of one existing Resistance soldier in the chosen bunker. The other soldiers remain AI. The Infiltrator keeps its original objectives; the Resistance player tries to stop it. PvP is first person.
+
+[h3]Implemented in this test[/h3]
+[list]
+[*]Two locally connected instances with independent character control.
+[*]Native weapon damage, defender elimination and the original mission ending flow.
+[*]First-person Resistance hands holding the plasma rifle.
+[*]Opposing results: Infiltrator completion means Resistance defeat; stopping the Infiltrator means Resistance success.
+[*]Native Restart Mission / Repeat with automatic defender rejoin after loading.
+[*]Separate game copies and copied save profiles; installation does not write to the original game or original saves.
+[/list]
+Eliminating the controlled soldier does not finish the original mission, and that soldier does not automatically respawn.
+
+[h3]Download and setup[/h3]
+[url=DOWNLOAD_LINK]Download TRMP 0.5.1-first-pvp-test[/url]
+
+Extract the ZIP, run Install-Mod.cmd, then open Launch-Mod.cmd in the installed folder. Follow QUICK-START.txt: start the Infiltrator host, finish the original intro, then start/join the Resistance instance. Switch window focus to control each character. No second Steam account or friend is needed for this local test.
+
+Requires the compatible Steam Windows game build and the installed assets used by the Infiltrator experiment. The installer checks the executable hash and downloads the pinned official UE4SS dependency separately. No game executable, content archive or personal save is included.
+
+[h3]What needs work[/h3]
+Stability, full-length playthrough testing, NPC animation/ragdolls, vision abilities, player ammunition behavior and visual polish remain experimental. This is a development test, not a finished campaign co-op or competitive release. Keep its networking on localhost; it has not been audited for public Internet hosting.
+
+Steam invitation acceptance and Internet game transport are the next networking milestone. The current Play Versus menu only previews the Steam invite dialog.
+
+[h3]Feedback[/h3]
+I'd appreciate reports on installation, connection, independent movement, first-person hands, damage/results and restart/rejoin. Include the mod/game version, PC specs and reproduction steps. The download contains a checklist and feedback template. Please do not post saves, credentials, full crash dumps or unreviewed logs publicly.
+
+This is an unofficial community experiment and is not affiliated with the game's developers or publisher.

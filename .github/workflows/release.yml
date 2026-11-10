@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Prerelease tag, for example v0.5.0-restart-hands-preview
+        description: Prerelease tag, for example v0.5.1-first-pvp-test
         required: true
         type: string
 permissions:

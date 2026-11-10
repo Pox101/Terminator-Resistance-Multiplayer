@@ -1,0 +1,28 @@
+TRMP 0.5.1-first-pvp-test - LOCAL TEST CHECKLIST
+
+Record Windows version, GPU/RAM, mod version and exact game build first.
+Use QUICK-START.txt. Two instances on one PC; switch window focus to control
+each. A friend, second Steam account or Internet game connection is not needed.
+
+[ ] Installation finishes and both isolated copies launch.
+[ ] Host's original Infiltrator intro finishes; automatic hosting starts.
+[ ] Defender joins and takes over one original bunker soldier.
+[ ] Move/look in the defender window; Infiltrator does not copy that input.
+[ ] Move/look in the Infiltrator window; defender does not copy that input.
+[ ] Defender sees first-person arms holding the plasma rifle.
+[ ] Firing and aim feedback work; report visual alignment problems.
+[ ] A native Infiltrator weapon can damage/eliminate the controlled soldier.
+[ ] Eliminated defender cannot move/fire and does not respawn automatically.
+[ ] Defender elimination alone does not complete the Infiltrator mission.
+[ ] Original objectives remain and original kill/stat callbacks still run.
+[ ] Infiltrator defeat ends defender actions and shows Resistance SUCCESS.
+[ ] Original mission completion gives Infiltrator completion / Resistance FAIL.
+[ ] Host's Restart Mission / Repeat loads a fresh original mission.
+[ ] Defender rejoins automatically after native loading screens are confirmed.
+[ ] Health/input/first-person hands are correct in the new mission.
+[ ] Original saves are still available when launching the unmodified game.
+
+Only mark checks you actually performed. Report not tested separately from
+failed. Original mission completion takes a normal playthrough; local developer
+integration coverage also used an accelerated native ending fixture.
+For problems, include the first failing step and use FEEDBACK-TEMPLATE.txt.

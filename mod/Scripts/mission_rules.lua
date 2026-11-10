@@ -13,6 +13,12 @@ function M.select(candidates,bunker)
     return best
 end
 local phases={active=true,completed=true,failed=true}
+-- The wire phase describes the original Infiltrator mission. The defender
+-- has the opposite objective, including when other NPCs stop the Infiltrator.
+function M.outcome(phase,faction)
+    if (phase~='completed' and phase~='failed') or (faction~='human' and faction~='terminator') then return nil end
+    return ((phase=='completed')==(faction=='terminator')) and 'success' or 'fail'
+end
 -- Only native mission state ends the session. A dead defender is deliberately
 -- absent from this decision: the Infiltrator still has its original objectives.
 function M.phase(previous,terminatorHealth,objectiveState,nativeFailure,nativeSummary)

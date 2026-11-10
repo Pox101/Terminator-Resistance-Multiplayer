@@ -1,0 +1,41 @@
+PRVI PVP TEST - PAKET ZA OBJAVU
+
+Ovo je pripremljen paket; nista nije automatski javno objavljeno.
+
+1. U GitHub Releases ili na svoj odabrani hosting prenesi datoteke iz
+   mape UPLOAD: instalacijski ZIP, source ZIP i SHA256SUMS.txt.
+   Instalacijski ZIP je download za testere. Source ZIP je kod za pregled
+   i build; nije gotova instalacija. Ne treba prenositi cijeli radni projekt.
+2. U STEAM-COMMUNITY-POST.txt zamijeni DOWNLOAD_LINK stvarnim HTTPS linkom
+   na taj release/download. Taj link jos ne postoji: GitHub repozitorij jos
+   nema postavljen remote niti javni release. Provjeri da link radi odjavljen.
+3. Na Steam Community stranici igre otvori novu raspravu. Prekopiraj TITLE
+   u naslov, a samo tekst nakon BODY u poruku. Tekst je na engleskom i koristi
+   Steam oznake za formatiranje. Pregledaj objavu prije slanja.
+4. Slike iz MEDIA su zasebni prilozi za predstavljanje testa. Nisu dio
+   instalacije. Natpisi u MEDIA-CAPTIONS.txt opisuju sto je stvarno prikazano.
+   Lokalna putanja do PNG datoteke nece biti javno vidljiva citateljima;
+   sliku prvo objavi kroz odabrani servis koji koristis za prikaz slike.
+5. Za prikupljanje prijava koristi docs/FEEDBACK-TEMPLATE.txt iz download ZIP-a
+   i komentare na svojoj objavi. Kontakt ili naziv GitHub repozitorija nisu
+   izmisljeni niti dodani bez tvoje odluke.
+
+VAZNO ZA OPIS
+Ova verzija testira dvije instance na jednom PC-u, uz prebacivanje fokusa.
+Nije jos online PvP, LAN, split-screen ni istodobni couch PvP s dva kontrolera.
+Nemoj izbaciti tu napomenu iz objave ili obecati spajanje prijatelja preko
+Steama u ovoj verziji. Za lokalni test ne treba prijatelj ili drugi Steam racun.
+Pobjeda Terminatora daje Resistance igracu MISSION FAILED; zaustavljanje
+Terminatora daje Resistance igracu MISSION SUCCESS.
+
+Ne objavljuj runtime, backups, profile, logove, dumpove ni .codex-attachments.
+Pripremljeni source ZIP nema te privatne podatke. Javne datoteke su odabrane
+eksplicitnim popisom, a download sadrzi samo mod kod/DLL-ove, upute i licence.
+
+Steam Community igre:
+https://steamcommunity.com/app/954740/discussions/
+Steam formatiranje teksta:
+https://steamcommunity.com/comment/Recommendation/formattinghelp
+
+Lokalni Git repozitorij s povijescu nalazi se u publication/Terminator-Resistance-Multiplayer.
+Source ZIP je snapshot pripremljenog commita; puna povijest ostaje u tom repozitoriju.

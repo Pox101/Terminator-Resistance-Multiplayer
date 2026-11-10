@@ -9,6 +9,11 @@ control of an existing Resistance soldier in the selected bunker.
 matches are not implemented. It is a development preview, not finished
 campaign co-op or a competitive multiplayer release.**
 
+First public technical test: start with [QUICK-START.txt](QUICK-START.txt).
+One tester switches window focus to control each instance. Simultaneous
+two-controller couch PvP and split-screen are not implemented. A test checklist
+and feedback template are in `docs/`.
+
 Stability is experimental. Native client initialization required safe visual
 mirrors. A crash dump identified a fault inside UE4SS Lua callback handling;
 recurring asynchronous scheduling was replaced by a fixed game-thread callback
@@ -33,6 +38,9 @@ remain unverified. See [the related UE4SS issue](https://github.com/UE4SS-RE/RE-
   defender-kill victory condition or automatic player respawn.
 - The client receives the native mission outcome. Native mission completion
   and Infiltrator defeat stop further defender actions and show an end message.
+  The defender sees MISSION FAILED when the Infiltrator completes its mission,
+  and MISSION SUCCESS when the Infiltrator is stopped. The native host summary
+  and the original mission state remain unchanged.
   **Restart Mission** reloads the native mission. The previously connected
   defender waits through the disconnect and rejoins when hosting is ready.
   Finish the original loading screens with a key press on both games.

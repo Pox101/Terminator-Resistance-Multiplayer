@@ -40,5 +40,11 @@ return function(M)
     rows[2].reloading=false;decoded=M.decode(M.encode(2,rows))
     check(decoded.players[2].reloadMs==0,'native reload completion restores idle hands')
     check(not M.decode('TRMP1|M|2|active|2,human,200,200,45,2'),'invalid native reload flag rejected')
+    check(M.outcome('completed','terminator')=='success','native completion is Terminator victory')
+    check(M.outcome('completed','human')=='fail','native completion is Resistance defeat')
+    check(M.outcome('failed','terminator')=='fail','native failure is Terminator defeat')
+    check(M.outcome('failed','human')=='success','native failure is Resistance victory')
+    check(M.outcome('active','human')==nil and M.outcome('active','terminator')==nil,'active mission has no winner')
+    check(M.outcome('completed','unknown')==nil,'invalid faction never claims victory')
     return n
 end

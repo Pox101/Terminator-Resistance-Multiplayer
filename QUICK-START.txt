@@ -1,0 +1,88 @@
+RESISTANCE MULTIPLAYER (TRMP) - FIRST PVP TEST
+Version 0.5.1-first-pvp-test | Windows / Steam | LOCAL TECHNICAL PREVIEW
+
+READ THIS FIRST
+This build connects TWO GAME INSTANCES ON ONE PC through localhost.
+It does not connect friends over the Internet or LAN. It is not split-screen
+or simultaneous two-controller couch PvP. One tester can switch between the
+two windows to check the two independently controlled characters.
+Steam invitation acceptance and Internet game transport are future work.
+
+WHAT YOU ARE TESTING
+The host plays the game's original Infiltrator mission. Player two controls
+one existing Resistance soldier in the selected bunker; other soldiers remain
+AI. The Infiltrator keeps its original objectives. The defender tries to stop
+it. PvP uses first person. Defender death eliminates that soldier without a
+respawn and does not, by itself, end the original mission.
+
+REQUIREMENTS
+- A legitimately installed Steam copy of Terminator: Resistance on Windows.
+- The installed Infiltrator content and the soldier assets used by the mod.
+- The executable build checked by the installer. Other builds/editions have
+  not been validated; the installer rejects a different executable hash.
+- Capacity to run two copies of the game. New hardware minimums are unmeasured.
+- Internet access during installation to download pinned official UE4SS 3.0.1.
+
+INSTALL
+1. Extract the entire release ZIP into an ordinary folder.
+2. Double-click Install-Mod.cmd. Read its final installation path.
+   Default: %LOCALAPPDATA%\TRMP-LocalPreview
+3. Open that INSTALLED folder and double-click Launch-Mod.cmd there.
+   Running the launcher in the extracted download folder will not find the
+   prepared game copies. Do not copy this mod into the original game folder.
+
+START THE INFILTRATOR PVP TEST
+1. In the launcher click "Start Infiltrator mission host".
+2. In the host game select Play > New Infiltrator Mode, follow the original
+   prompts and choose Normal. Finish the loading screen with Enter, watch
+   the intro and wait about 15 more seconds for automatic hosting.
+3. In the launcher click "Play a Resistance NPC", then "Join player two".
+4. Finish the joining game's loading screen with Enter. If its loading
+   screen stays pale/white after loading, try Enter. Allow the player/body
+   setup to finish; it may take another 15 seconds after entering the map.
+5. Switch between the host and defender windows. Keyboard/mouse input follows
+   the focused game. LMB fires, RMB aims, R requests the native rifle reload.
+   The Infiltrator still acquires equipment through the original mission.
+
+Do not click "Host loaded save" for this scenario. That button belongs to an
+older campaign-save arena experiment. Play > Play Versus currently previews
+the Steam invitation dialog; it does not start an Internet match.
+
+RESULTS AND ANOTHER ROUND
+- Original Infiltrator mission completed: Infiltrator wins; Resistance loses.
+  The host keeps the native MISSION COMPLETE summary. The defender sees
+  MISSION FAILED.
+- Native Infiltrator mission failed / Infiltrator stopped: Infiltrator loses;
+  Resistance sees MISSION SUCCESS.
+- Use the host's original Restart Mission / Repeat button for a new mission.
+  The defender may briefly return to its menu while the host reloads. It
+  rejoins automatically once the new listener is ready. Press Enter on both
+  games' loading screens. The native intro repeats.
+- If the host process is closed and relaunched, use Join player two again.
+
+SAVES AND UPDATING
+Installation copies existing saves into separate host/client profiles once.
+Game launches use those isolated profiles. The original game and original
+saves are not written by the installer. Existing copied profiles survive an
+update. Close both preview games before updating the installed preview.
+Infiltrator is a native single-session mode; campaign saves remain available
+in the isolated copies but do not turn it into a saved campaign mission.
+
+KNOWN LIMITS
+Experimental stability. Full-duration normal playthroughs and stress testing
+are incomplete. NPC mirrors use simplified animation and disappear on death;
+ragdolls, vision abilities, additional human slots and visual polish need work.
+Native NPC ammunition settings are retained; a complete player ammo/reload
+system is not part of this test. No "unhackable" or anti-cheat claim is made.
+Networking stays bound to 127.0.0.1. Do not expose this preview on the Internet.
+
+REPORTING / REMOVING
+Use docs/TEST-CHECKLIST.txt and docs/FEEDBACK-TEMPLATE.txt. Share reproduction
+steps and cropped game screenshots. Do not post saves, credentials, full crash
+dumps or unreviewed logs publicly.
+To remove the preview, close its game windows and remove only its separate
+installed TRMP-LocalPreview folder. The original game is outside that folder.
+
+This is an unofficial experiment, not affiliated with the game's developers
+or publisher. No game executable, content archive or personal save is bundled.
+See README.md and THIRD-PARTY-NOTICES.txt for technical details and licenses.

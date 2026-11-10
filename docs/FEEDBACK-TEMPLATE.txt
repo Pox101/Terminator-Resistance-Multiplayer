@@ -1,0 +1,26 @@
+TRMP FIRST PVP TEST - FEEDBACK
+
+Mod version: 0.5.1-first-pvp-test
+Windows version:
+CPU / RAM / GPU:
+Game edition / installed DLC:
+Game executable SHA256 (installer reports unsupported builds):
+Fresh install or preview update:
+Role affected: Infiltrator host / Resistance defender / both
+
+First failing checklist step:
+Steps to reproduce:
+1.
+2.
+3.
+
+Expected behavior:
+What happened:
+Frequency (once / sometimes / every time):
+Did both games finish their loading screens with Enter?
+Does it happen again after restarting both preview games?
+Optional cropped GAME screenshot:
+
+Please do not post saves, account identifiers, credentials, complete crash
+dumps or unreviewed logs publicly. Remove personal paths and identifying
+details from any excerpt you choose to share.
