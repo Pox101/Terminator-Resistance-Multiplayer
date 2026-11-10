@@ -22,7 +22,10 @@ REPORTING CHANNELS
 - No GitHub account? Reply to the Steam Community announcement with the
   mod version, report signature and reproduction steps. The maintainer can
   arrange collection of the full reviewed .txt through an announced channel.
-- Discord: no official server/invite announced yet. Email is available now.
+- Discord: https://discord.gg/Dg2qD6U3b
+  Use it to find a testing partner or attach your reviewed .txt in the
+  appropriate channel. This invitation was announced after the alpha.1 ZIP
+  was packaged; the launcher's Open report folder still works for attaching.
   Only use contacts linked from the official repository or maintainer's Steam
   post. This release has no SMTP credentials/webhook and sends nothing for you.
 

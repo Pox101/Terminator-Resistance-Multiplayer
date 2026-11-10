@@ -51,7 +51,9 @@ After a crash, the mod can prepare a LOCAL report. Nothing is uploaded automatic
 
 [b]No GitHub account? Email your reviewed report to luckyluka160@gmail.com.[/b] The launcher's Email report (draft) button opens a draft; you attach the reviewed .txt and send it yourself. If you use webmail, send it manually to that address. Include your role, first failing step and reproduction steps. Your sender address is visible to the recipient/email provider.
 
-[url=https://github.com/Pox101/Terminator-Resistance-Multiplayer/issues]GitHub Issues[/url] remains an optional PUBLIC alternative (it requires a GitHub account). You can also reply here with your version, role, report signature and the first failing step. No official Discord server has been announced yet. See REPORT-A-BUG.txt in the ZIP.
+[url=https://discord.gg/Dg2qD6U3b]Join the TRMP Discord[/url] to find a testing partner, arrange a session or attach your reviewed .txt report. Discord is optional; email remains available. Messages/files in a channel are visible to people with access, so review the report before posting. The installer ZIP was packaged before this Discord invite was added; use Open report folder and attach the file yourself.
+
+[url=https://github.com/Pox101/Terminator-Resistance-Multiplayer/issues]GitHub Issues[/url] remains an optional PUBLIC alternative (it requires a GitHub account). You can also reply here with your version, role, report signature and the first failing step. See REPORT-A-BUG.txt in the ZIP for report collection instructions.
 
 [b]Privacy: GitHub Issues and Steam replies are public. Never post raw logs, crash XML, memory dumps, saves, account details or tokens. The generated report filters those fields, but please review it before sharing. Diagnostic preparation can be disabled in the launcher.[/b]
 

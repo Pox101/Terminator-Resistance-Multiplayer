@@ -39,7 +39,9 @@ accepting an invite. Keep the IP driver on loopback; do not forward its port.
 GitHub Issues are optional and public. Without GitHub, send a reviewed report
 to luckyluka160@gmail.com. Email report (draft) opens generic instructions;
 you attach/send the file yourself. No credentials, automatic attachment or
-upload endpoint is embedded. Discord is not announced yet. See REPORT-A-BUG.txt and
+upload endpoint is embedded. Discord: https://discord.gg/Dg2qD6U3b (announced
+after this installer was packaged; attach via Open report folder).
+See REPORT-A-BUG.txt and
 docs/DIAGNOSTICS-PRIVACY.txt. Never post raw logs/XML, dumps, saves or tokens.
 
 # 0.6.0-steam-dev — experimental invitation and relay transport

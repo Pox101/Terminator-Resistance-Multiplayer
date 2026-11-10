@@ -74,8 +74,9 @@ HOW TO SEND IT
    shared, others may copy them; removing your local report does not remove
    remote copies. Never attach raw logs, saves, crash XML or memory dumps.
    Without GitHub, use the maintainer's email luckyluka160@gmail.com, or report
-   version/signature/reproduction steps in the Steam announcement. No Discord
-   server is announced yet. No private upload endpoint is configured here. Email
+   version/signature/reproduction steps in the Steam announcement. Discord
+   invitation: https://discord.gg/Dg2qD6U3b (announced after alpha.1 packaging).
+   No private upload endpoint is configured here. Email
    exposes the sender address to its recipient/provider; Discord visibility
    depends on channel access. No mail/Discord message is sent by this mod.
 

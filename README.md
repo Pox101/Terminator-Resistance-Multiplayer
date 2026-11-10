@@ -22,6 +22,10 @@ No Git, GitHub account, compiler or developer tools are needed to download or
 install. Extract all files, run Install-Mod.cmd, then Launch-Mod.cmd in the
 installed folder. Start with [START-HERE.txt](START-HERE.txt) and [QUICK-START.txt](QUICK-START.txt).
 For reporting without GitHub, see [REPORT-A-BUG.txt](REPORT-A-BUG.txt).
+Contact: **luckyluka160@gmail.com** or [TRMP Discord](https://discord.gg/Dg2qD6U3b)
+for testing partners and reviewed report attachments. Discord was announced
+after the alpha.1 ZIP was packaged; the existing email/report-folder buttons
+work with that ZIP. No automatic Discord upload or bot is installed.
 One tester switches window focus to control each instance. Simultaneous
 two-controller couch PvP and split-screen are not implemented. A test checklist
 and feedback template are in `docs/`.

@@ -21,7 +21,9 @@ https://github.com/Pox101/Terminator-Resistance-Multiplayer/releases/tag/v0.6.0-
    javna dodatna opcija; Steam komentar moze navesti verziju/potpis/korake.
 7. Potvrdjeni javni kontakt: luckyluka160@gmail.com. Email report (draft)
    otvara nacrt bez priloga/slanja; tester sam prilozi pregledani .txt i posalje.
-   Discord server jos nije napravljen i ne navodimo izmisljenu pozivnicu.
+   Discord pozivnica: https://discord.gg/Dg2qD6U3b. Dodana je nakon pakiranja
+   alpha.1 ZIP-a; ZIP i njegov hash ostaju isti. Upute u Steam tekstu/releaseu
+   navode da igrac sam prilozi .txt preko Open report folder.
    Paket nema SMTP lozinku, tajni webhook, token ni automatski upload.
 
 Ako dogovaras termin testiranja, dodaj tocno vrijeme i vremensku zonu u objavu.
