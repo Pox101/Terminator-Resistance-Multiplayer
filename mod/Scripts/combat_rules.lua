@@ -38,10 +38,16 @@ end
 function M.damagePlayer(shooter,target,mode,now)
     if shooter==target or shooter.health<=0 or target.health<=0 then return false,'inactive' end
     if mode~='pvp' or shooter.faction==target.faction then return false,'friendly' end
-    target.health=math.max(0,target.health-M.damage);target.revision=target.revision+1
+    return M.hurt(target,M.damage,now,shooter)
+end
+function M.hurt(target,amount,now,shooter)
+    if type(amount)~='number' or amount~=amount or amount<=0 or amount>10000 then return false,'damage' end
+    if target.health<=0 then return false,'inactive' end
+    target.health=math.max(0,target.health-math.ceil(amount));target.revision=target.revision+1
     if target.health==0 then
-        target.respawnAt=now+M.respawnSeconds;target.reloadAt=0;target.deaths=target.deaths+1
-        shooter.kills=shooter.kills+1;shooter.revision=shooter.revision+1
+        target.respawnAt=target.allowRespawn==false and 0 or now+M.respawnSeconds
+        target.reloadAt=0;target.deaths=target.deaths+1
+        if shooter then shooter.kills=shooter.kills+1;shooter.revision=shooter.revision+1 end
         return true,'death'
     end
     return true,'hit'

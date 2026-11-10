@@ -10,3 +10,6 @@ for path in sorted((root / "mod" / "Scripts").glob("*.lua")):
 rules = compile_lua((root / "mod/Scripts/combat_rules.lua").read_text(), "combat_rules.lua")()
 tests = compile_lua((root / "tests/combat_rules_test.lua").read_text(), "combat_rules_test.lua")()
 print(f"PASS: {tests(rules)} combat/authority/protocol checks; all mod Lua files compile")
+scenario = compile_lua((root / "mod/Scripts/scenario_rules.lua").read_text(), "scenario_rules.lua")()
+scenario_tests = compile_lua((root / "tests/scenario_rules_test.lua").read_text(), "scenario_rules_test.lua")()
+print(f"PASS: {scenario_tests(scenario, rules)} Infiltrator round/faction/protocol checks")
