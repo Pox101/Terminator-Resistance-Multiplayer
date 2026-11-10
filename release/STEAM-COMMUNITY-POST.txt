@@ -1,7 +1,7 @@
 TITLE:
 [Mod prototype] Infiltrator vs Resistance - first local PvP technical test
 
-BODY (Steam formatting; replace DOWNLOAD_LINK before posting):
+BODY (copy the following text into your Steam Community post):
 
 [h2]Resistance Multiplayer (TRMP) - first PvP prototype[/h2]
 I'm sharing an early, unofficial multiplayer experiment for Terminator: Resistance.
@@ -23,7 +23,8 @@ The host plays the original Infiltrator mission. A second player instance takes 
 Eliminating the controlled soldier does not finish the original mission, and that soldier does not automatically respawn.
 
 [h3]Download and setup[/h3]
-[url=DOWNLOAD_LINK]Download TRMP 0.5.1-first-pvp-test[/url]
+[url=https://github.com/Pox101/Terminator-Resistance-Multiplayer/releases/download/v0.5.1-first-pvp-test/TRMP-0.5.1-first-pvp-test.zip]Download TRMP 0.5.1-first-pvp-test (installer ZIP)[/url]
+[url=https://github.com/Pox101/Terminator-Resistance-Multiplayer/releases/tag/v0.5.1-first-pvp-test]Release notes, source and screenshot kit[/url]
 
 Extract the ZIP, run Install-Mod.cmd, then open Launch-Mod.cmd in the installed folder. Follow QUICK-START.txt: start the Infiltrator host, finish the original intro, then start/join the Resistance instance. Switch window focus to control each character. No second Steam account or friend is needed for this local test.
 

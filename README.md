@@ -9,7 +9,9 @@ control of an existing Resistance soldier in the selected bunker.
 matches are not implemented. It is a development preview, not finished
 campaign co-op or a competitive multiplayer release.**
 
-First public technical test: start with [QUICK-START.txt](QUICK-START.txt).
+Download the [first public local PvP test](https://github.com/Pox101/Terminator-Resistance-Multiplayer/releases/tag/v0.5.1-first-pvp-test)
+([installer ZIP](https://github.com/Pox101/Terminator-Resistance-Multiplayer/releases/download/v0.5.1-first-pvp-test/TRMP-0.5.1-first-pvp-test.zip)).
+Start with [QUICK-START.txt](QUICK-START.txt).
 One tester switches window focus to control each instance. Simultaneous
 two-controller couch PvP and split-screen are not implemented. A test checklist
 and feedback template are in `docs/`.
