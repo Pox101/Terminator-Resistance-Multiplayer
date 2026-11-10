@@ -7,11 +7,13 @@ $label=New-Object Windows.Forms.Label;$label.Text="Nothing is uploaded automatic
 $role=New-Object Windows.Forms.ComboBox;$role.DropDownStyle='DropDownList';$role.Items.AddRange(@('host','client'));$role.SelectedIndex=0;$role.SetBounds(15,60,130,25);$form.Controls.Add($role)
 $prepare=New-Object Windows.Forms.Button;$prepare.Text='Prepare latest session';$prepare.SetBounds(155,58,190,29);$form.Controls.Add($prepare)
 $folder=New-Object Windows.Forms.Button;$folder.Text='Open report folder';$folder.Enabled=$false;$folder.SetBounds(355,58,180,29);$form.Controls.Add($folder)
+$contact=New-Object Windows.Forms.Label;$contact.Text='Email: luckyluka160@gmail.com';$contact.SetBounds(545,65,315,23);$form.Controls.Add($contact)
 $list=New-Object Windows.Forms.ListBox;$list.SetBounds(15,95,850,85);$form.Controls.Add($list)
 $text=New-Object Windows.Forms.TextBox;$text.Multiline=$true;$text.ReadOnly=$true;$text.ScrollBars='Both';$text.WordWrap=$false;$text.Font=New-Object Drawing.Font('Consolas',10);$text.SetBounds(15,190,850,360);$form.Controls.Add($text)
 $warning=New-Object Windows.Forms.CheckBox;$warning.Text='I reviewed this report. I understand that posting on GitHub makes it public.';$warning.SetBounds(15,558,850,25);$form.Controls.Add($warning)
 $copy=New-Object Windows.Forms.Button;$copy.Text='Copy reviewed report';$copy.Enabled=$false;$copy.SetBounds(15,590,220,30);$form.Controls.Add($copy)
-$github=New-Object Windows.Forms.Button;$github.Text='Open GitHub Issues (public)';$github.Enabled=$false;$github.SetBounds(245,590,250,30);$form.Controls.Add($github)
+$email=New-Object Windows.Forms.Button;$email.Text='Email report (draft)';$email.Enabled=$false;$email.SetBounds(245,590,220,30);$form.Controls.Add($email)
+$github=New-Object Windows.Forms.Button;$github.Text='Open GitHub Issues (public)';$github.Enabled=$false;$github.SetBounds(475,590,250,30);$form.Controls.Add($github)
 $status=New-Object Windows.Forms.Label;$status.Text='Reports stay local until you deliberately paste/upload them.';$status.SetBounds(15,625,850,22);$form.Controls.Add($status)
 $script:reportPaths=@()
 function Refresh-TrmpReports {
@@ -29,7 +31,7 @@ $list.Add_SelectedIndexChanged({
     $folder.Enabled=$list.SelectedIndex -ge 0
     if($list.SelectedIndex -ge 0){try{$text.Text=Read-TrmpBounded $script:reportPaths[$list.SelectedIndex] 262144}catch{$text.Text='Report could not be read safely.'}}
 })
-$warning.Add_CheckedChanged({$copy.Enabled=$github.Enabled=$warning.Checked -and $text.Text.StartsWith('TRMP DIAGNOSTIC REPORT')})
+$warning.Add_CheckedChanged({$copy.Enabled=$github.Enabled=$email.Enabled=$warning.Checked -and $text.Text.StartsWith('TRMP DIAGNOSTIC REPORT')})
 $prepare.Add_Click({
     try{
         $root=Join-Path $PSScriptRoot ('runtime\'+$role.SelectedItem)
@@ -40,6 +42,12 @@ $prepare.Add_Click({
 })
 $folder.Add_Click({if($list.SelectedIndex -ge 0){$path=Assert-TrmpPlainPath (Split-Path $script:reportPaths[$list.SelectedIndex] -Parent);Start-Process -FilePath (Join-Path $env:SystemRoot 'explorer.exe') -ArgumentList @('"'+$path+'"');$status.Text='Folder opened. Attach only the reviewed TRMP-report .txt using your chosen reporting channel.'}})
 $copy.Add_Click({[Windows.Forms.Clipboard]::SetText($text.Text);$status.Text='Copied. Choose your recipient/channel yourself. GitHub/Steam posts are public.'})
+$email.Add_Click({
+    $subject=[uri]::EscapeDataString('TRMP 0.6.0-alpha.1 bug report')
+    $body=[uri]::EscapeDataString("Please attach only your REVIEWED TRMP-report-*.txt using Open report folder.`r`nAdd your role, the first failing step and what happened.`r`nDo not attach raw logs, crash XML, dumps or saves.")
+    try{Start-Process ('mailto:luckyluka160@gmail.com?subject='+$subject+'&body='+$body);$status.Text='Draft requested. Attach the reviewed .txt yourself. Nothing was attached or sent by the mod.'}
+    catch{$status.Text='No mail app available? Email luckyluka160@gmail.com manually with the reviewed report attached.'}
+})
 $github.Add_Click({Start-Process 'https://github.com/Pox101/Terminator-Resistance-Multiplayer/issues/new';$status.Text='Browser opened. Nothing submitted. Paste the reviewed report and reproduction steps yourself.'})
 Refresh-TrmpReports
 [void]$form.ShowDialog()

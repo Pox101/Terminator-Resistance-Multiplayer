@@ -63,15 +63,19 @@ HOW TO SEND IT
    Discord channel; no Git/GitHub account is needed to get this local file.
 2. To share publicly, tick the review/public-sharing acknowledgment. Copy
    the report or attach its generated .txt file, then click Open GitHub Issues.
+   To use email instead, select Email report (draft). It opens a mailto draft
+   addressed to luckyluka160@gmail.com with generic instructions, no report
+   data or attachment. You attach the reviewed .txt and send it yourself in
+   your chosen email/webmail app. No Git/GitHub account is required for email.
 3. In your browser, log into your own GitHub account and submit it yourself
    to Pox101/Terminator-Resistance-Multiplayer. Nothing is submitted merely by
    opening the browser. No GitHub token or developer secret ships in the mod.
 4. GitHub Issues, pasted reports and uploaded attachments are PUBLIC. Once
    shared, others may copy them; removing your local report does not remove
    remote copies. Never attach raw logs, saves, crash XML or memory dumps.
-   Without GitHub, report version/signature/reproduction steps in the Steam
-   announcement. If you prefer private reporting, wait for a contact channel
-   to be announced. No private upload endpoint is configured here. Email
+   Without GitHub, use the maintainer's email luckyluka160@gmail.com, or report
+   version/signature/reproduction steps in the Steam announcement. No Discord
+   server is announced yet. No private upload endpoint is configured here. Email
    exposes the sender address to its recipient/provider; Discord visibility
    depends on channel access. No mail/Discord message is sent by this mod.
 

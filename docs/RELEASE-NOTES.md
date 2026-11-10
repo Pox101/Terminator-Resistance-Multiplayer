@@ -36,10 +36,10 @@ finished campaign co-op, full vision features, NPC/ragdoll/visual polish.
 Both remote testers must run THIS SAME alpha mod at its main menu before
 accepting an invite. Keep the IP driver on loopback; do not forward its port.
 
-GitHub Issues are optional and public. Without GitHub, report version,
-signature and reproduction steps in the Steam announcement; full reviewed
-text reports can be attached through an announced email/Discord channel.
-No private contact endpoint is embedded. See REPORT-A-BUG.txt and
+GitHub Issues are optional and public. Without GitHub, send a reviewed report
+to luckyluka160@gmail.com. Email report (draft) opens generic instructions;
+you attach/send the file yourself. No credentials, automatic attachment or
+upload endpoint is embedded. Discord is not announced yet. See REPORT-A-BUG.txt and
 docs/DIAGNOSTICS-PRIVACY.txt. Never post raw logs/XML, dumps, saves or tokens.
 
 # 0.6.0-steam-dev — experimental invitation and relay transport

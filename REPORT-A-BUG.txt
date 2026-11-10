@@ -9,6 +9,12 @@ TRMP ALPHA - QUICK REPORTING
    The signature and package hash help us group reports from the same build.
 
 REPORTING CHANNELS
+- Email (no GitHub account): luckyluka160@gmail.com
+  After reviewing, click Email report (draft). It opens your chosen mail app
+  with an empty report template. Use Open report folder to attach the reviewed
+  TRMP-report-*.txt yourself, add reproduction steps, then send it yourself.
+  No report content/attachment is automatically placed in a URL or uploaded.
+  If no mail app is configured, send to this address using your usual webmail.
 - GitHub Issues (optional GitHub account; PUBLIC):
   https://github.com/Pox101/Terminator-Resistance-Multiplayer/issues
   Tick the review/public-sharing acknowledgment if you want to copy the
@@ -16,10 +22,9 @@ REPORTING CHANNELS
 - No GitHub account? Reply to the Steam Community announcement with the
   mod version, report signature and reproduction steps. The maintainer can
   arrange collection of the full reviewed .txt through an announced channel.
-- Email/Discord contact details will appear in the announcement if supplied
-  by the maintainer. Only use contacts linked from the official repository
-  or the maintainer's Steam post. No email address/webhook is built into this
-  release, and it does not send any messages or files on your behalf.
+- Discord: no official server/invite announced yet. Email is available now.
+  Only use contacts linked from the official repository or maintainer's Steam
+  post. This release has no SMTP credentials/webhook and sends nothing for you.
 
 Nothing is uploaded automatically. GitHub Issues and Steam replies are public.
 Discord channels are visible to whoever has access; email reveals your sender
