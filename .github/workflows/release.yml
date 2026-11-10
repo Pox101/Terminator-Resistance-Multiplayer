@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Prerelease tag, for example v0.1.0-local-preview
+        description: Prerelease tag, for example v0.2.0-infiltrator-preview
         required: true
         type: string
 permissions:

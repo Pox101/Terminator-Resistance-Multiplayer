@@ -1,8 +1,9 @@
 # Roadmap
 
-1. Validate the local weapon/health prototype across fresh launches and
-   reconnects. Expand collision, death and respawn coverage before adding
-   more weapons.
+1. Complete a native Infiltrator mission with one player controlling an
+   original bunker guard. Verify native incoming weapon damage, death/quest
+   callbacks, disconnect recovery and stability across fresh launches.
+   Add more occupied NPC slots only after the one-defender test is reliable.
 2. Implement a Steam session and game-traffic transport using the authenticated
    game context. Require relay-only routing for IP privacy where available.
    Test with separate authenticated peers; keep localhost as the test path.

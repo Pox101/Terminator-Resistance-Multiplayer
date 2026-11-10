@@ -1,6 +1,7 @@
 -- Local cosmetic actors follow the real replicated pawns on each machine.
 -- They never replace possession, movement replication, or the saved game pawn.
 return function(H,C,emit,prototype)
+    local Scenario=require('scenario_rules')
     local bodies, assets = {}, {}
     local worldAddress, readyAfter, nextUpdate = 0, 0, 0
     local camera, cameraPawn, thirdPerson, vision = nil, nil, true, false
@@ -238,6 +239,7 @@ return function(H,C,emit,prototype)
         end)
     end
     local function update(pc)
+        if C.scenario=='infiltrator_hunt' and C.role=='host' then return end
         stage='check world'
         if not valid(pc) or not valid(pc.Pawn) then return end
         local world=pc:GetWorld()
@@ -253,7 +255,8 @@ return function(H,C,emit,prototype)
             readyAfter=os.time()+12
         end
         local game=H.GetGameplayStatics():GetGameInstance(pc)
-        if game.bIsInLoadingScreen then readyAfter=os.time()+12;return end
+        if game.bIsInLoadingScreen or (C.scenario=='infiltrator_hunt' and game.bIsInCutscene) then readyAfter=os.time()+12;return end
+        if C.scenario=='infiltrator_hunt' and not name:find('LDLC1_Pasadena3_DLC1_ALL',1,true) then return end
         if os.time()<readyAfter then return end
         assetOwner=game
         stage='read world time'
@@ -269,8 +272,13 @@ return function(H,C,emit,prototype)
             end
         end
         for _,pawn in ipairs(FindAllOf('Pawn') or {}) do
-            if valid(pawn) and pawn:IsPlayerControlled() and pawn:GetWorld():GetAddress()==worldAddress then
-                local kind=pawn:GetClass():GetFullName()=='Class /Script/Engine.Character' and 'terminator' or 'human'
+            local mirror=C.scenario=='infiltrator_hunt' and valid(pawn) and C.role=='client'
+                and pawn:GetClass():GetFullName()=='Class /Script/Engine.Character' and not pawn:IsLocallyControlled() and valid(pawn.PlayerState)
+            local controlled=valid(pawn) and pawn:IsPlayerControlled() and (C.scenario~='infiltrator_hunt' or valid(pawn.Controller))
+            if valid(pawn) and (controlled or mirror) and pawn:GetWorld():GetAddress()==worldAddress then
+                local kind=mirror and (pawn.PlayerState.PlayerId==1000000000 and 'human' or 'terminator')
+                    or Scenario.faction(pawn:GetClass():GetFullName(),C.scenario)
+                if not kind then return end
                 local body=bodies[pawn:GetAddress()] or setupBody(pc,pawn,kind)
                 local velocity=pawn:GetVelocity()
                 local moving=velocity.X*velocity.X+velocity.Y*velocity.Y>25
@@ -283,8 +291,8 @@ return function(H,C,emit,prototype)
                 if kind=='terminator' then
                     -- Walking speed read from the shipped CH_FPPInfiltrator CDO.
                     pawn.CharacterMovement.MaxWalkSpeed=320.0
-                    if pawn:IsLocallyControlled() then setupCamera(pc); setupReticle(pc) end
                 end
+                if C.role=='client' and pawn:IsLocallyControlled() then setupCamera(pc);setupReticle(pc) end
             end
         end
     end
@@ -356,6 +364,7 @@ return function(H,C,emit,prototype)
         end
     end
     local function combatFrame(pc)
+        if C.scenario=='infiltrator_hunt' and C.role=='host' then return end
         if not C.combatEnabled or not isReady(pc) then return end
         assetOwner=H.GetGameplayStatics():GetGameInstance(pc)
         setupCombat(pc)
@@ -383,10 +392,22 @@ return function(H,C,emit,prototype)
         local message='Connecting combat state...'
         if own then
             local elapsed=math.max(0,time-(combatView.receivedAt or time))*1000
-            local phase=dead and ('Respawn '..math.ceil(math.max(0,own.respawnMs-elapsed)/1000)..'s')
+            local phase=dead and (C.scenario=='infiltrator_hunt' and 'ELIMINATED' or ('Respawn '..math.ceil(math.max(0,own.respawnMs-elapsed)/1000)..'s'))
                 or reloading and 'Reloading' or 'LMB fire  |  R reload'
             message=string.format('%s  %s\nHealth %d/%d  |  Plasma %d/%d\n%s  |  K %d  D %d',
                 combatView.mode:upper(),own.faction:upper(),own.health,own.maxHealth,own.ammo,own.reserve,phase,own.kills,own.deaths)
+        end
+        local round=_G.TRMPCombat and _G.TRMPCombat.round and _G.TRMPCombat.round()
+        if C.scenario=='infiltrator_hunt' and own then
+            message=string.format('RESISTANCE NPC | Health %d/%d | Ammo %d\nLMB fire | R reload\nDefend the bunker. Original Infiltrator objectives remain.',own.health,own.maxHealth,own.ammo)
+            if dead then message=message..'\nYour soldier is dead. The original mission continues.' end
+        end
+        if round then
+            local status=round.phase=='waiting' and 'Waiting for the other player'
+                or round.phase=='finished' and ('Winner: '..round.winner:upper()..' ('..round.reason..')')
+                or string.format('Hunt %d:%02d | Resistance NPCs: %d',math.floor(round.seconds/60),round.seconds%60,round.npcs)
+            message=message..'\nINFILTRATOR 1v1 | '..status
+                ..'\n'..(own and own.faction=='human' and 'Stop the Terminator. Survive 10 minutes to win.' or 'Eliminate the human defender. One life each.')
         end
         if message~=hudValue then
             hudText:SetText(StaticFindObject('/Script/Engine.Default__KismetTextLibrary'):Conv_StringToText(message));hudValue=message
@@ -395,7 +416,7 @@ return function(H,C,emit,prototype)
             if valid(body.pawn) and valid(body.pawn.PlayerState) then
                 local state
                 for _,p in ipairs(combatView and combatView.players or {}) do if p.id==body.pawn.PlayerState.PlayerId then state=p end end
-                local hidden=(state and state.health<=0) or (body.pawn:IsLocallyControlled() and (first or body.cameraHidden))
+                local hidden=body.pawn.bHidden or (state and state.health<=0) or (body.pawn:IsLocallyControlled() and (first or body.cameraHidden))
                 body.mesh:SetHiddenInGame(hidden,true)
                 if valid(body.weapon) then body.weapon:SetActorHiddenInGame(hidden) end
             end

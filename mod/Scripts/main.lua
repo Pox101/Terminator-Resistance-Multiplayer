@@ -1,12 +1,16 @@
 -- Localhost feasibility probe. All save access uses isolated test profiles.
 local H = require('UEHelpers')
 local C = require('config')
+if C.scenario=='infiltrator_hunt' then
+    local diagnostics=assert(package.loadlib(C.directory..'/prototype_runtime.dll','log_exceptions'));diagnostics()
+end
 if C.nativeHudGuard then
     local guard, err = package.loadlib(C.directory .. '/controller_guard.dll', 'install_guard')
     assert(guard, 'Build and copy controller_guard.dll before launching: ' .. tostring(err))
     guard()
 end
 local pending = false
+local executing = false
 local movingUntil = 0
 local driverConfigured = false
 local prototypeModeAddress = 0
@@ -31,12 +35,36 @@ end
 local prototype = C.prototypePawn and require('prototype')(H, C, emit) or nil
 local bodies = prototype and C.fullBodies and require('bodies')(H,C,emit,prototype) or nil
 local combat = bodies and C.combatEnabled and require('combat')(H,C,emit,prototype,bodies) or nil
+local scenario=C.scenario=='infiltrator_hunt' and require('scenario_runtime')(H,C,emit) or nil
+local geometry=C.scenario=='infiltrator_hunt' and require('geometry_sync')(H,C,emit) or nil
+local listenReadyAfter,listenWorld=0,0
+local function configureScenarioHosting()
+    if C.role~='host' or C.scenario~='infiltrator_hunt' then return end
+    local pc=context()
+    if not valid(pc) or not valid(pc.Pawn) then return end
+    local world=pc:GetWorld()
+    if not world:GetFullName():find('LDLC1_Pasadena3_DLC1_ALL',1,true) or valid(world.NetDriver) then return end
+    local game=H.GetGameplayStatics():GetGameInstance(pc)
+    if listenWorld~=world:GetAddress() or game.bIsInLoadingScreen or game.bIsInCutscene then
+        listenWorld=world:GetAddress();listenReadyAfter=os.time()+12;return
+    end
+    if os.time()<listenReadyAfter then return end
+    listenReadyAfter=os.time()+30
+    local pf=assert(io.open(C.directory..'/process-id.txt','r'));local pid=assert(tonumber(pf:read('*a')));pf:close()
+    local f=assert(io.open(C.directory..'/listen-world.txt','w'))
+    f:write(string.format('%d %X %X',pid,world:GetAddress(),world:GetClass():GetAddress()));f:close()
+    if scenario then scenario.prepare(pc) end
+    local listen=assert(package.loadlib(C.directory..'/prototype_runtime.dll','listen_local'));listen()
+    emit('scenario_host=in_place listener='..safe(function() return world.NetDriver:GetFullName() end))
+end
 local function configureLocalNetworking()
     if driverConfigured then return end
     local engine = FindFirstOf('GameEngine')
     if not valid(engine) then return end
     local class = StaticFindObject('/Script/OnlineSubsystemUtils.IpNetDriver')
     local defaults = StaticFindObject('/Script/OnlineSubsystemUtils.Default__IpNetDriver')
+    defaults.InitialConnectTimeout=300
+    defaults.ConnectionTimeout=300
     emit('ip_class=' .. safe(function() return class:GetFullName() end)
         .. ' connection_class=' .. safe(function() return defaults.NetConnectionClassName:ToString() end))
     engine.NetDriverDefinitions:ForEach(function(_, wrapped)
@@ -59,6 +87,7 @@ local function configurePrototypePlayers()
     if not valid(gm) or gm:GetAddress()==prototypeModeAddress then return end
     gm.PlayerControllerClass=StaticFindObject('/Script/Engine.PlayerController')
     gm.DefaultPawnClass=StaticFindObject('/Script/Engine.Character')
+    if C.scenario=='infiltrator_hunt' and valid(gm.GameSession) then gm.GameSession.MaxPlayers=2 end
     prototypeModeAddress=gm:GetAddress()
     emit('prototype_players=base PlayerController and Character for subsequent joins')
 end
@@ -72,7 +101,7 @@ local function snapshot()
         .. ' game_mode=' .. safe(function() return gs:GetGameMode(pc):GetFullName() end))
     local driver = world.NetDriver
     emit('net_driver=' .. safe(function() return driver:GetFullName() end)
-        .. ' clients=' .. safe(function() return driver.ClientConnections:GetArrayNum() end)
+        .. ' clients=' .. safe(function() return valid(driver) and C.role=='host' and driver.ClientConnections:GetArrayNum() or 0 end)
         .. ' server_connection=' .. safe(function() return driver.ServerConnection:GetFullName() end))
     for _, p in ipairs(FindAllOf('PlayerController') or {}) do
         if valid(p) then
@@ -135,9 +164,14 @@ LoopAsync(100, function()
     if pending then return false end
     pending = true
     ExecuteInGameThread(function()
+        if executing then pending=false;return end
+        executing=true
         local ok, err = pcall(function()
             configureLocalNetworking()
             configurePrototypePlayers()
+            configureScenarioHosting()
+            if scenario then scenario.update(context()) end
+            if geometry then geometry.update(context()) end
             if prototype then prototype.update(context()) end
             if bodies then bodies.update(context()) end
             if combat then combat.update(context()) end
@@ -151,7 +185,7 @@ LoopAsync(100, function()
             if ticks % 50 == 0 then snapshot() end
         end)
         if not ok then emit('probe_error=' .. tostring(err)) end
-        pending = false
+        executing=false;pending = false
     end)
     return false
 end)
@@ -160,6 +194,8 @@ LoopAsync(16, function()
     if inputPending then return false end
     inputPending = true
     ExecuteInGameThread(function()
+        if executing then inputPending=false;return end
+        executing=true
         local ok, err = pcall(function()
             local pc = context()
             local aim=prototype and prototype.input(pc) or nil
@@ -170,7 +206,7 @@ LoopAsync(16, function()
             end
         end)
         if not ok then emit('input_error=' .. tostring(err)) end
-        inputPending = false
+        executing=false;inputPending = false
     end)
     return false
 end)

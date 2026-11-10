@@ -1,18 +1,38 @@
 # Resistance Multiplayer — local preview
 
-An unofficial Terminator Resistance experiment: two game instances, a human
-and an Infiltrator body, independent movement, mouse aiming and a small
-host-controlled combat prototype.
+An unofficial Terminator Resistance experiment with two isolated game
+instances on one Windows PC. The Infiltrator experiment keeps the original
+mission: the host plays the native Infiltrator, while player two takes
+control of an existing Resistance soldier in the selected bunker.
 
 **This release connects two instances on one Windows PC. Steam Internet
 matches are not implemented. It is a development preview, not finished
 campaign co-op or a competitive multiplayer release.**
 
-Stability is experimental. A host crash occurred during cold-start testing;
-input callbacks were simplified afterward, but longer sessions and repeated
-reconnects still need validation.
+Stability is experimental. Native client initialization required safe visual
+mirrors, and an RPC callback stalled during an extended test. The callback
+was revised; longer sessions and complete mission playthroughs remain unverified.
 
-## What works
+## Infiltrator mission experiment
+
+- The original mission creates its randomized world before listen hosting
+  starts. Hosting does not reopen or replace the mission.
+- The joining player drives one existing bunker soldier. Its original
+  actor, health, team and mission references stay on the host.
+- The host keeps the native Infiltrator weapon, health, HUD and vision.
+- Player shooting uses the soldier's original rifle range, rate, ammo and
+  damage type, with server hit tests feeding the native damage system.
+  Reload requests use the native weapon component.
+- Randomized bunker interior transforms are sent to the client.
+- Original mission objectives remain. There is no added round timer,
+  defender-kill victory condition or automatic player respawn.
+
+This is a one-defender experiment. Other soldiers remain NPCs. Additional
+human slots, full NPC animation/ragdoll synchronization, polished first-person
+hands and full mission completion still need work. The joining player's
+weapon/body presentation uses placeholder visuals.
+
+## Earlier arena prototype
 
 - Plasma firing requests over the existing owned player connection.
 - Host-controlled ammunition, fire rate, two-second reloads and hit tests.
@@ -23,7 +43,7 @@ reconnects still need validation.
 - A combat HUD, weapon meshes, muzzle/audio effects and Terminator vision
   preview. First-person hands and proper weapon animations remain unfinished.
 
-The prototype currently assigns the native host as human and joining base
+The arena prototype assigns the native host as human and joining base
 characters as Terminators. Human/Terminator balancing is preliminary (100
 versus 1000 health). General faction selection and additional players have
 not been play-tested.
@@ -35,11 +55,15 @@ not been play-tested.
 2. Double-click **Install-Mod.cmd**. It finds the Steam game, downloads the
    pinned official UE4SS dependency, and prepares isolated game copies under
    `%LOCALAPPDATA%\TRMP-LocalPreview`.
-3. Open **Launch-Mod.cmd in the installed folder**. Start a co-op or PvP host.
-4. In the host game, choose **Play → Continue** to load the copied save. Use
-   **Host loaded save** in the launcher, then finish the game's loading screen.
-5. Start player two, use **Join player two**, and finish its loading screen.
-   The joining character appears near the host after initialization.
+3. Open **Launch-Mod.cmd in the installed folder**. For the mission test,
+   select **Start Infiltrator mission host**.
+4. In the host game choose **Play → New Infiltrator Mode**, finish the intro
+   and wait for automatic hosting. Existing copied campaign saves remain available.
+5. Select **Play a Resistance NPC**, then **Join player two** and finish the
+   joining game's loading screen. The soldier appears inside the chosen bunker.
+
+For the earlier arena test, start a co-op/PvP host, choose **Play → Continue**
+to use the copied save, then **Host loaded save** before joining player two.
 
 If automatic discovery fails, run:
 
@@ -63,6 +87,38 @@ existing installation and are not bundled or duplicated.
 
 Close the preview game windows before updating. Do not publish your runtime,
 profile, backup, crash or log directories when sharing the source project.
+
+## Experimental Infiltrator mission takeover
+
+The launcher also offers **Start Infiltrator mission host** and **Play a
+Resistance NPC**. This scenario is under live validation; it is separate from the
+campaign-save arena above.
+
+1. Start the Infiltrator host. Choose **Play > New Infiltrator Mode**, select
+   Normal difficulty and finish the loading screen and intro.
+2. Hosting starts in the existing mission after the intro. Do not use
+   **Host loaded save** for this scenario: it would reopen the level.
+3. Start the Resistance defender and use **Join player two**. Finish its
+   loading screen promptly; this map is larger than the arena map.
+4. Player two takes control of an existing soldier in the selected Tech-Com
+   bunker. Both players use first person. The Infiltrator still follows the
+   original intel/bunker objectives. The defender tries to stop it.
+
+The native host runs the Infiltrator and Resistance NPC simulation. The
+client uses base-engine character mirrors to avoid executing unsupported
+single-player callbacks. NPC mirrors currently use the common Resistance
+soldier model, walking/idle animation and disappear on death; full ragdolls
+and precise weapon-animation replication are unfinished. The defender's
+movement drives the original NPC, and firing/reloading commands use that
+NPC's original weapon component. Its original health and quest/death
+callbacks remain authoritative. The current client weapon mesh is a visual
+placeholder. The installed Infiltrator/Franco model is used;
+an exact film-model T-850 designation has not been established.
+
+There is no added survival timer or replacement victory condition. Killing
+the controlled soldier removes that original NPC; the Infiltrator mission
+continues. Restart through the game's original mission flow. The prototype
+currently supports one remote NPC player; larger player counts are untested.
 
 ## Controls
 

@@ -1,5 +1,6 @@
 -- Local arena prototype. UE owns RPC routing; the host owns all combat state.
 return function(H,C,emit,prototype,bodies)
+    if C.scenario=='infiltrator_hunt' then return require('infiltrator_mission')(H,C,emit,prototype,bodies) end
     local Rules=require('combat_rules')
     local players,worldAddress,localView={},0,nil
     local mode=C.mode=='pvp' and 'pvp' or 'coop'

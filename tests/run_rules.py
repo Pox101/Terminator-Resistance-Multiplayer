@@ -12,4 +12,21 @@ tests = compile_lua((root / "tests/combat_rules_test.lua").read_text(), "combat_
 print(f"PASS: {tests(rules)} combat/authority/protocol checks; all mod Lua files compile")
 scenario = compile_lua((root / "mod/Scripts/scenario_rules.lua").read_text(), "scenario_rules.lua")()
 scenario_tests = compile_lua((root / "tests/scenario_rules_test.lua").read_text(), "scenario_rules_test.lua")()
-print(f"PASS: {scenario_tests(scenario, rules)} Infiltrator round/faction/protocol checks")
+print(f"PASS: {scenario_tests(scenario)} Infiltrator faction checks")
+mission = compile_lua((root / "mod/Scripts/mission_rules.lua").read_text(), "mission_rules.lua")()
+mission_tests = compile_lua((root / "tests/mission_rules_test.lua").read_text(), "mission_rules_test.lua")()
+print(f"PASS: {mission_tests(mission)} native mission slot/protocol checks")
+
+geometry_factory = compile_lua((root / "mod/Scripts/geometry_sync.lua").read_text(), "geometry_sync.lua")()
+geometry = geometry_factory(lua.table(), lua.table(role="host"), lambda _: None)
+decode = geometry.decode
+prefix = "TRMP1|G|/Game/Maps/DLC1/Prefabs/Dungeon_01|"
+assert decode(prefix + "1,2,3,0,0,0,1") is not None
+for payload in ["1,2,3,0,0,0,2", "1,2,3,0,0,0", "nan,2,3,0,0,0,1", "1e99,2,3,0,0,0,1", "1,2,3,0,0,0,1,9"]:
+    assert decode(prefix + payload) is None
+assert decode("TRMP1|G|/Game/UnapprovedMap|1,2,3,0,0,0,1") is None
+print("PASS: 7 mission interior protocol checks")
+lua.globals().package.loaded["combat_rules"] = rules
+weapon = compile_lua((root / "mod/Scripts/npc_weapon.lua").read_text(), "npc_weapon.lua")()
+weapon_tests = compile_lua((root / "tests/npc_weapon_test.lua").read_text(), "npc_weapon_test.lua")()
+print(f"PASS: {weapon_tests(weapon)} native rifle authority/cover checks")

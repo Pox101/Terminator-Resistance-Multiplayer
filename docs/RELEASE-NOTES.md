@@ -1,3 +1,16 @@
+# 0.2.0 — experimental Infiltrator mission takeover
+
+Preserves the native Infiltrator mission and lets a joining player control
+one existing bunker soldier. Hosting starts in the initialized world without
+reopening the map. Original health, NPC mission references and objectives
+remain native; there are no added round rules or player respawns.
+
+Adds safe client character mirrors, bunker transform synchronization and
+player aiming/damage using the original soldier rifle configuration.
+Local tests cover connection, takeover, native damage and interior placement.
+Full mission completion, long-session stability, native weapon animation and
+additional defenders are not yet validated. The client uses placeholder visuals.
+
 # 0.1.0 — local development preview
 
 Two isolated instances can connect on one PC, move independently and use a
