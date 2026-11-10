@@ -1,6 +1,7 @@
 -- Localhost feasibility probe. All save access uses isolated test profiles.
 local H = require('UEHelpers')
 local C = require('config')
+local diagnostics=require('diagnostics').new(C)
 if C.scenario=='infiltrator_hunt' then
     local diagnostics=assert(package.loadlib(C.directory..'/prototype_runtime.dll','log_exceptions'));diagnostics()
 end
@@ -19,9 +20,14 @@ local function safe(f)
     return 'unavailable'
 end
 local function emit(message)
+    diagnostics.record(message)
     local line = os.date('!%Y-%m-%dT%H:%M:%SZ') .. ' [' .. C.role .. '] ' .. message
     print('[TRMP] ' .. line .. '\n')
-    local f = io.open(C.directory .. '/probe.log', 'a')
+    local path=C.directory..'/probe.log'
+    local f = io.open(path, 'a')
+    if f and (f:seek('end') or 0)>=2097152 then
+        f:close();os.remove(path..'.1');os.rename(path,path..'.1');f=io.open(path,'w')
+    end
     if f then f:write(line .. '\n'); f:close() end
 end
 local function context()
@@ -195,6 +201,7 @@ local function pollCommands(ended)
     end
 end
 local function update()
+    diagnostics.pulse()
     if online and online.update() then return end
     if session then
         session.update()

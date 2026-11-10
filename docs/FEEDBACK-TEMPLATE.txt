@@ -1,5 +1,10 @@
 TRMP FIRST PVP TEST - FEEDBACK
 
+Optional reviewed TRMP-report-*.txt from the launcher's Diagnostic reports:
+Report signature / package manifest hash:
+GitHub Issues are PUBLIC. Send only the generated, reviewed report; never
+attach raw logs, crash XML, saves or dumps. No automatic upload occurs.
+
 Mod version: 0.6.0-steam-dev (use the actual package version)
 Transport: default loopback / experimental Steam / developer tunnel_test
 Windows version:

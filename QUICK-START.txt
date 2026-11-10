@@ -88,3 +88,8 @@ installed TRMP-LocalPreview folder. The original game is outside that folder.
 This is an unofficial experiment, not affiliated with the game's developers
 or publisher. No game executable, content archive or personal save is bundled.
 See README.md and THIRD-PARTY-NOTICES.txt for technical details and licenses.
+DIAGNOSTICS: The launcher can prepare local crash reports after an unexpected
+exit. Nothing is uploaded automatically. Use Diagnostic reports to review a
+report before sharing. GitHub Issues are PUBLIC; never attach raw logs/dumps.
+Untick automatic report preparation to disable it for a launch. Full details:
+docs/DIAGNOSTICS-PRIVACY.txt.

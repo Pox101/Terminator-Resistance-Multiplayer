@@ -1,5 +1,15 @@
 # 0.6.0-steam-dev — experimental invitation and relay transport
 
+Adds local crash diagnostics with per-launch correlation, classified native
+exceptions/relative module stack offsets, bounded projected event history,
+release/helper hashes and signatures for grouping reports. A finite process
+watcher prepares reports after abnormal exit; force-stops remain explicitly
+uncertain. No report is uploaded automatically. The launcher provides local
+review, public-sharing warnings and an option to disable report preparation.
+Raw logs, dumps, saves, account/IP identifiers and freeform messages are
+excluded. See DIAGNOSTICS-PRIVACY.txt. Includes parser/privacy/retention and
+real watcher normal/abnormal-exit tests without crashing the game.
+
 Adds accepted-invite callback handling, asynchronous lobby joining, owner/member
 authorization and code/content compatibility checks. A running isolated mod
 can switch from host to defender at the menu. The Versus panel starts the

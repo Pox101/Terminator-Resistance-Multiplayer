@@ -1,0 +1,92 @@
+TRMP ALPHA - LOCAL DIAGNOSTICS AND REPORT SHARING
+
+WHAT HAPPENS
+While your isolated mod copy runs, a small PowerShell helper waits for that
+specific game process to exit. It checks process path and start time against
+the launcher session, so a reused process ID cannot select another app.
+It sleeps between checks. It is not a Windows service or startup task, does
+not need administrator rights, and does not scan other apps or your network.
+After an unexpected exit it prepares a local text report and shows a notice.
+The helper then exits when the notice is dismissed. It never uploads data.
+After a normal exit no report/notice is generated unless an engine crash
+record exists. Forced termination and an actual crash cannot always be
+distinguished: reports state this uncertainty rather than inventing a cause.
+After a PC/power failure, the next launch can recover an uncertain report.
+While loading/cutscenes, a stale heartbeat does not prove a hang.
+
+CONTROL / LOCATION
+Untick 'Prepare local crash reports after unexpected exit' in the launcher,
+or use Launch-Mod.ps1 -Role host -NoDiagnostics (also available for client).
+This disables the new event log, heartbeat and watcher for that launch.
+The game's, UE4SS's and existing mod development logs remain separate.
+Each role stores new diagnostic events, heartbeat/session state and reports
+under the installed mod's runtime/host or runtime/client folder. Original
+game saves are not read by the collector. Existing copied test saves remain
+in their separate profiles and are never included in a report.
+Maximum event logs: two files of about256KiB each per role; at most20 reports
+per role, with at most200 events per report. The existing raw probe log now
+rotates at about2MiB with one backup. The game/UE4SS can still create their
+own larger private logs/dumps; this collector neither exports nor deletes
+those. Delete the report files locally whenever you wish; uninstalling the
+separate mod directory removes its local diagnostics, no service remains.
+
+INCLUDED IN A SHAREABLE REPORT
+- Mod version, release-manifest SHA256, four helper DLL SHA256 values.
+- Windows version, role, transport and mode, approximate session duration.
+- A new random report/session UUID for each launch (not a device/account ID).
+- Up to200 known events with UTC timestamps and sequence numbers: mission
+  phase, native damage amounts, travel/start/restart steps, classified Lua
+  errors and known Lua module/line numbers. Unknown/freeform text is dropped.
+- Numeric exit code, heartbeat age, private lobby member count/status and
+  authentication/relay/connection flags. Lobby/peer identifiers are omitted.
+- If the isolated game's fresh crash XML matches that session's process:
+  classified exception and known module+relative-offset stack frames.
+- A SHA256 signature to group matching crash evidence. A signature is a
+  debugging aid, not proof that two reports have the same root cause.
+
+EXCLUDED
+No raw logs/XML, full or mini memory dumps, saves, screenshots, usernames,
+Steam/account/lobby IDs, IP addresses, PC names, command lines, personal
+paths, hardware serials, access tokens, clipboard contents or freeform
+exception strings are included. Unknown XML fields/modules are dropped.
+The XML reader disables DTD/external entities and limits input size. The
+collector only reads fixed files in its own role profile and rejects linked
+paths. It does not execute anything in a report or follow URLs from logs.
+The report viewer can copy text to your clipboard only when YOU click Copy;
+it never reads your existing clipboard or uploads the copied text.
+
+HOW TO SEND IT
+1. Open Diagnostic reports in the launcher. Prepare the latest session if
+   needed and review the WHOLE report. Reproduction steps are written by you
+   in the issue; they are not silently collected from keyboard input.
+2. To share publicly, tick the review/public-sharing acknowledgment. Copy
+   the report or attach its generated .txt file, then click Open GitHub Issues.
+3. In your browser, log into your own GitHub account and submit it yourself
+   to Pox101/Terminator-Resistance-Multiplayer. Nothing is submitted merely by
+   opening the browser. No GitHub token or developer secret ships in the mod.
+4. GitHub Issues, pasted reports and uploaded attachments are PUBLIC. Once
+   shared, others may copy them; removing your local report does not remove
+   remote copies. Never attach raw logs, saves, crash XML or memory dumps.
+   If you prefer private reporting, do not post an issue; wait for a private
+   channel to be announced. No private upload endpoint is configured here.
+
+WHY THIS DESIGN
+There is no telemetry server, embedded webhook, automatic upload, inbound
+reporting port, persistence mechanism or remote command/update channel in
+this subsystem. No mining, advertising or unrelated computation is added.
+Code and report schema are public and are tested in GitHub Actions. Helpers
+are built from source; UE4SS is downloaded separately with a pinned hash.
+Unsigned experimental game mods/hooks may still trigger security warnings;
+this is not a reason to disable antivirus or bypass a security block.
+Checksums detect a changed download; they are not a security audit or a
+guarantee that code is harmless. Source review and testing remain necessary.
+Steam/game/UE4SS have their own behavior; these diagnostic controls describe
+the TRMP reporting subsystem, not those third-party components.
+
+MAINTAINER HANDLING
+Treat reports as untrusted text. Open as text, never run snippets/attachments.
+Use signature, package hash and module offsets to group issues; ask for
+minimal reproduction steps. Do not ask players for passwords, tokens or
+full memory dumps. If genuinely needed later, define a separate, explicit
+private consent/review workflow for extra data before collecting it.
+No report can guarantee the exact root cause of every native/UE4SS crash.

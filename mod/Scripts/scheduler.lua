@@ -34,14 +34,14 @@ return function(H,emit,context,update,input,resetWorld,dormant)
         if frame==lastFrame then return end
         local now=os.clock()
         busy=true;lastFrame=frame
-        local ok,err=pcall(function()
+        local ok,err=xpcall(function()
             if now>=nextUpdate then
                 nextUpdate=now+0.1
                 if not dormant or not dormant() then ensureTick(context()) end
                 update()
             end
             if not travelling then input() end
-        end)
+        end,debug and debug.traceback or tostring)
         if not ok then emit('scheduler_error='..tostring(err)) end
         busy=false
     end

@@ -1,4 +1,4 @@
-param([ValidateSet('host','client')][string]$Role = 'host', [string]$Map,[ValidatePattern('^[0-9]{1,20}$')][string]$LobbyId)
+param([ValidateSet('host','client')][string]$Role = 'host', [string]$Map,[ValidatePattern('^[0-9]{1,20}$')][string]$LobbyId,[switch]$NoDiagnostics)
 $ErrorActionPreference = 'Stop'
 $root = Join-Path $PSScriptRoot "runtime\$Role"
 $exe = Join-Path $root 'Terminator\Binaries\Win64\Terminator-Win64-Shipping.exe'
@@ -60,7 +60,31 @@ if (Test-Path -LiteralPath (Join-Path $root 'TestGameUserSettings.ini')) {
     $gameArgs += '-GAMEUSERSETTINGSINI="' + (Join-Path $root 'TestGameUserSettings.ini') + '"'
 }
 if ($Map) { $gameArgs = @($Map) + $gameArgs }
+Import-Module (Join-Path $PSScriptRoot 'Diagnostics.psm1') -Force
+[void](Assert-TrmpPlainPath $root)
+foreach($name in @('diagnostic-session-id.txt','diagnostic-events.jsonl','diagnostic-events.jsonl.1','diagnostic-heartbeat.json','probe.log','probe.log.1')){[void](Assert-TrmpPlainPath (Join-Path $root $name))}
+$previous=Get-TrmpJson (Join-Path $root 'diagnostic-session.json')
+if(-not$NoDiagnostics -and $previous -and -not(Get-TrmpProperty $previous 'finishedUtc')){
+    try{[void](New-TrmpReport $root $previous $null 'recovery')}catch{Write-Warning 'Previous local report could not be recovered.'}
+}
+$sessionId=[guid]::NewGuid().ToString()
+$sessionIdPath=Join-Path $root 'diagnostic-session-id.txt'
+if($NoDiagnostics){if(Test-Path -LiteralPath $sessionIdPath){Remove-Item -LiteralPath $sessionIdPath}}
+else{[IO.File]::WriteAllText($sessionIdPath,$sessionId)}
+$sessionVersion='unknown';$manifestPath=Join-Path $PSScriptRoot 'payload-manifest.json'
+if(Test-Path -LiteralPath $manifestPath){$sessionVersion=(Get-Content -LiteralPath $manifestPath -Raw|ConvertFrom-Json).version}
+$sessionMode='unknown';if($config -match "mode='(coop|pvp)'"){$sessionMode=$Matches[1]}
 # These are interactive test windows so the tester can switch keyboard control.
 $process = Start-Process -FilePath $exe -ArgumentList $gameArgs -WorkingDirectory (Split-Path $exe) -WindowStyle Normal -PassThru
 $process.Id | Set-Content -LiteralPath (Join-Path $root 'process-id.txt')
+$packageHash=$null;if(Test-Path -LiteralPath $manifestPath){$packageHash=(Get-FileHash -LiteralPath $manifestPath -Algorithm SHA256).Hash.ToLowerInvariant()}
+$session=[pscustomobject]@{id=$sessionId;role=$Role;processId=$process.Id;startTicks=$process.StartTime.ToUniversalTime().Ticks;startedUtc=$process.StartTime.ToUniversalTime().ToString('o');version=$sessionVersion;transport=$transport;mode=$sessionMode;packageHash=$packageHash}
+if(-not$NoDiagnostics){
+Write-TrmpJson (Join-Path $root 'diagnostic-session.json') $session
+$watcher=Join-Path $PSScriptRoot 'Watch-Game.ps1'
+try{
+    Start-Process -FilePath (Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe') -ArgumentList @('-NoProfile','-File',('"'+$watcher+'"'),'-Role',$Role,'-SessionId',$sessionId,'-ShowNotice') -WindowStyle Hidden | Out-Null
+}catch{Write-Warning 'Local crash watcher did not start. Diagnostic reports can still be prepared manually.'}
+Write-Output 'Local diagnostics enabled. Nothing is uploaded; review reports in the launcher before sharing.'
+}else{Write-Output 'Automatic diagnostic reports disabled for this launch. Existing private game/mod logs still apply.'}
 Write-Output "$Role started with PID $($process.Id)."

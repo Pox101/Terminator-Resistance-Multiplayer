@@ -28,3 +28,12 @@ integration coverage also used an accelerated native ending fixture.
 For problems, include the first failing step and use FEEDBACK-TEMPLATE.txt.
 For the separate experimental Steam path, follow STEAM-TEST.txt. A local
 socket-pair result is not a completed Internet test.
+LOCAL DIAGNOSTIC REPORTS (development build)
+- Launcher states local collection/no automatic upload and offers opt-out.
+- A normal game exit ends its watcher without an automatic crash report.
+- Diagnostic reports can prepare/review a session snapshot; a snapshot or
+  forced stop is not described as a proven crash/root cause.
+- Report includes only known events/status/relative frames, no raw log/XML,
+  save, dump, account ID, IP, command line or personal path.
+- Copy/public-browser buttons require the review acknowledgment. Opening
+  GitHub does not submit anything. Do not post an issue just to test this UI.

@@ -11,6 +11,11 @@ transport, but separate-account Internet validation remains pending.**
 See [the Steam development test guide](docs/STEAM-TEST.txt). Default launches
 still use localhost. Campaign co-op and competitive multiplayer are unfinished.
 
+Development builds prepare local crash reports for review; nothing is
+uploaded automatically. Use **Diagnostic reports** in the launcher. Public
+GitHub sharing is optional and requires deliberate submission in your browser.
+See [diagnostic data, limits and privacy controls](docs/DIAGNOSTICS-PRIVACY.txt).
+
 Download the [first public local PvP test](https://github.com/Pox101/Terminator-Resistance-Multiplayer/releases/tag/v0.5.1-first-pvp-test)
 ([installer ZIP](https://github.com/Pox101/Terminator-Resistance-Multiplayer/releases/download/v0.5.1-first-pvp-test/TRMP-0.5.1-first-pvp-test.zip)).
 Start with [QUICK-START.txt](QUICK-START.txt).
