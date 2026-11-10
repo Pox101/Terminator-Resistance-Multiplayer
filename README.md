@@ -1,24 +1,27 @@
-# Resistance Multiplayer — local preview
+# Resistance Multiplayer — alpha 0.6.0-alpha.1
 
-An unofficial Terminator Resistance experiment with two isolated game
-instances on one Windows PC. The Infiltrator experiment keeps the original
+An unofficial Terminator Resistance multiplayer experiment. The Infiltrator experiment keeps the original
 mission: the host plays the native Infiltrator, while player two takes
 control of an existing Resistance soldier in the selected bunker.
 
-**The public 0.5.1 release connects two instances on one Windows PC. This
-development branch adds experimental Steam invite acceptance and relay
-transport, but separate-account Internet validation remains pending.**
-See [the Steam development test guide](docs/STEAM-TEST.txt). Default launches
+**This alpha includes Steam invitation acceptance, experimental relay transport
+and local crash reporting. Internet play between separate accounts/machines
+has NOT yet been validated.** The tested gameplay path uses two isolated
+instances on one PC, including a local Steam socket-pair tunnel test.
+See [the Steam test guide](docs/STEAM-TEST.txt). Default launches
 still use localhost. Campaign co-op and competitive multiplayer are unfinished.
 
-Development builds prepare local crash reports for review; nothing is
+This alpha prepares local crash reports for review; nothing is
 uploaded automatically. Use **Diagnostic reports** in the launcher. Public
 GitHub sharing is optional and requires deliberate submission in your browser.
 See [diagnostic data, limits and privacy controls](docs/DIAGNOSTICS-PRIVACY.txt).
 
-Download the [first public local PvP test](https://github.com/Pox101/Terminator-Resistance-Multiplayer/releases/tag/v0.5.1-first-pvp-test)
-([installer ZIP](https://github.com/Pox101/Terminator-Resistance-Multiplayer/releases/download/v0.5.1-first-pvp-test/TRMP-0.5.1-first-pvp-test.zip)).
-Start with [QUICK-START.txt](QUICK-START.txt).
+**[Download the alpha installer ZIP](https://github.com/Pox101/Terminator-Resistance-Multiplayer/releases/download/v0.6.0-alpha.1/TRMP-0.6.0-alpha.1.zip)**
+([release notes](https://github.com/Pox101/Terminator-Resistance-Multiplayer/releases/tag/v0.6.0-alpha.1)).
+No Git, GitHub account, compiler or developer tools are needed to download or
+install. Extract all files, run Install-Mod.cmd, then Launch-Mod.cmd in the
+installed folder. Start with [START-HERE.txt](START-HERE.txt) and [QUICK-START.txt](QUICK-START.txt).
+For reporting without GitHub, see [REPORT-A-BUG.txt](REPORT-A-BUG.txt).
 One tester switches window focus to control each instance. Simultaneous
 two-controller couch PvP and split-screen are not implemented. A test checklist
 and feedback template are in `docs/`.
@@ -97,14 +100,14 @@ not been play-tested.
 For the earlier arena test, start a co-op/PvP host, choose **Play → Continue**
 to use the copied save, then **Host loaded save** before joining player two.
 
-### Steam invitation preview
+### Experimental Steam invitations
 
 In an isolated mod game, choose **Play → Play Versus**, below Infiltrator
 Mode. This creates a private two-person Steam lobby and opens Steam's friend
 invitation dialog. **Invite Friends** reopens that dialog; **Back** leaves
 the lobby. Steam must be running with the overlay enabled.
 
-In the published 0.5.1 this previews the menu/invitation flow only. Development
+The older 0.5.1 previews the menu/invitation flow only. This alpha
 0.6 adds an opt-in Steam Versus path with invite acceptance, lobby checks and
 relay transport. Separate-peer Internet validation is pending; see
 [STEAM-TEST.txt](docs/STEAM-TEST.txt). Use the default launcher steps above for
@@ -206,7 +209,9 @@ The optional Steam diagnostic found the game authenticated as app 954740,
 obtained SteamNetworkingSockets012, delivered a local network socket-pair
 payload and reported the relay network available. This does **not** prove
 Steam peer-to-peer game connectivity, relay-only IP privacy or cheat resistance.
-A real peer/session transport and Internet test are still required.
+The alpha implements real-peer lobby/transport code, but an actual two-account
+Internet test is still required. Authenticated relay flags and a working local
+socket pair do not establish that the whole remote flow works on other PCs.
 
 ## Build and test
 

@@ -1,0 +1,30 @@
+TERMINATOR RESISTANCE MULTIPLAYER - ALPHA 0.6.0-alpha.1
+
+No Git, GitHub account, compiler or developer tools are needed to install.
+You DO need the compatible installed Windows/Steam game and its content.
+
+1. Extract ALL files from TRMP-0.6.0-alpha.1.zip (do not run inside the ZIP).
+2. Double-click Install-Mod.cmd. It finds the game, checks the supported
+   executable and downloads/verifies official UE4SS. Let it finish.
+3. The separate installed mod folder opens. Double-click Launch-Mod.cmd
+   INSIDE THAT FOLDER. Default location: %LOCALAPPDATA%\TRMP-LocalPreview.
+
+INTERNET TEST - EXPERIMENTAL, NOT YET VERIFIED WITH TWO ACCOUNTS
+Both players install THIS EXACT ZIP and start 'Steam Versus (experimental)'.
+Host: Play > Play Versus > invite your friend using the Steam overlay.
+Friend: accept while the isolated mod is already open at its main menu.
+Host: START INFILTRATOR MISSION, complete the original prompts/intro. Confirm
+loading screens with Enter. Joining should happen when the mission is ready.
+See QUICK-START.txt and docs/STEAM-TEST.txt before testing.
+
+ONE PC / NO FRIEND AVAILABLE
+Use the local two-instance Infiltrator test in QUICK-START.txt. This is the
+validated gameplay path. You switch window focus to control each character.
+
+IMPORTANT
+Internet invite acceptance/routing and remote restart/rejoin are implemented
+but still need real two-account testing. A local Steam socket pair does NOT
+prove Internet play. No split-screen, host migration or cold invite launch.
+Installation uses separate copied profiles; original saves are not written.
+Crashes can prepare a LOCAL report. Nothing is uploaded automatically.
+See REPORT-A-BUG.txt; GitHub is optional for reporting, not a download requirement.

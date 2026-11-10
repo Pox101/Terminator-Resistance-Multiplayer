@@ -21,7 +21,7 @@ if($Role){Start-Role $Role $Mode $Scenario $Transport;return}
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 $form=New-Object Windows.Forms.Form
-$form.Text='Resistance Multiplayer - Local Preview'
+$form.Text='Resistance Multiplayer - alpha 0.6.0-alpha.1'
 $form.Size=New-Object Drawing.Size(540,605)
 $form.StartPosition='CenterScreen';$form.FormBorderStyle='FixedDialog';$form.MaximizeBox=$false
 $label=New-Object Windows.Forms.Label

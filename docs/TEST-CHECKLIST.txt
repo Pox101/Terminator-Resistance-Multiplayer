@@ -1,4 +1,4 @@
-TRMP 0.6.0-steam-dev - DEFAULT LOCAL TEST CHECKLIST
+TRMP 0.6.0-alpha.1 - DEFAULT LOCAL TEST CHECKLIST
 
 Record Windows version, GPU/RAM, mod version and exact game build first.
 Use QUICK-START.txt. Two instances on one PC; switch window focus to control

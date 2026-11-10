@@ -5,7 +5,7 @@ Report signature / package manifest hash:
 GitHub Issues are PUBLIC. Send only the generated, reviewed report; never
 attach raw logs, crash XML, saves or dumps. No automatic upload occurs.
 
-Mod version: 0.6.0-steam-dev (use the actual package version)
+Mod version: 0.6.0-alpha.1 (use the actual package version)
 Transport: default loopback / experimental Steam / developer tunnel_test
 Windows version:
 CPU / RAM / GPU:

@@ -15,7 +15,7 @@
 // Internet callers must authenticate/authorize the Steam connection separately.
 namespace trmp {
 constexpr size_t DatagramLimit=4096, HeaderSize=16;
-constexpr const char* NetworkBuild="0.6.0-steam-dev";
+constexpr const char* NetworkBuild="0.6.0-alpha.1";
 inline uint32_t read32(const uint8_t* p){return uint32_t(p[0])<<24|uint32_t(p[1])<<16|uint32_t(p[2])<<8|p[3];}
 inline void write32(uint8_t* p,uint32_t v){p[0]=uint8_t(v>>24);p[1]=uint8_t(v>>16);p[2]=uint8_t(v>>8);p[3]=uint8_t(v);}
 struct Frame {uint8_t kind=0,role=0;uint32_t epoch=0;const uint8_t* payload=nullptr;size_t length=0;};

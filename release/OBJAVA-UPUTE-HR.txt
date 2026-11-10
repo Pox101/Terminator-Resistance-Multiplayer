@@ -1,42 +1,35 @@
-PRVI PVP TEST - PAKET ZA OBJAVU
+TRMP 0.6.0-alpha.1 - NOVA ALFA OBJAVA
 
-GitHub repozitorij:
-https://github.com/Pox101/Terminator-Resistance-Multiplayer
-Release za ovaj test:
-https://github.com/Pox101/Terminator-Resistance-Multiplayer/releases/tag/v0.5.1-first-pvp-test
+Preuzimanje za igrace (bez Gita i bez GitHub racuna):
+https://github.com/Pox101/Terminator-Resistance-Multiplayer/releases/download/v0.6.0-alpha.1/TRMP-0.6.0-alpha.1.zip
+Release:
+https://github.com/Pox101/Terminator-Resistance-Multiplayer/releases/tag/v0.6.0-alpha.1
 
-1. Release sadrzi instalacijski ZIP za testere, source ZIP, community kit sa
-   slikama i kontrolne zbrojeve. Source ZIP je kod za pregled i build;
-   nije gotova instalacija. Ne treba prenositi cijeli radni projekt.
-2. STEAM-COMMUNITY-POST.txt vec sadrzi pravi HTTPS download link i link na
-   release. Preostaje ti pregledati tekst i sam ga postaviti na Steam.
-3. Na Steam Community stranici igre otvori novu raspravu. Prekopiraj TITLE
-   u naslov, a samo tekst nakon BODY u poruku. Tekst je na engleskom i koristi
-   Steam oznake za formatiranje. Pregledaj objavu prije slanja.
-4. Slike iz MEDIA su zasebni prilozi za predstavljanje testa. Nisu dio
-   instalacije. Natpisi u MEDIA-CAPTIONS.txt opisuju sto je stvarno prikazano.
-   Lokalna putanja do PNG datoteke nece biti javno vidljiva citateljima;
-   sliku prvo objavi kroz odabrani servis koji koristis za prikaz slike.
-5. Za prikupljanje prijava koristi docs/FEEDBACK-TEMPLATE.txt iz download ZIP-a
-   i komentare na svojoj objavi. Kontakt ili naziv GitHub repozitorija nisu
-   izmisljeni niti dodani bez tvoje odluke.
+1. Igrac skida instalacijski ZIP preko direktnog linka. Source code ZIP nije
+   instalacija. Git, kompajler i razvojni alati mu ne trebaju.
+2. Raspakira sve, pokrene Install-Mod.cmd, zatim Launch-Mod.cmd u instaliranom
+   folderu koji se otvori. START-HERE.txt objasnjava prvi korak bez tehnickih detalja.
+3. STEAM-COMMUNITY-POST.txt sadrzi TITLE i BODY s pravim verzioniranim linkom.
+   TITLE ide u naslov rasprave, samo tekst nakon BODY u poruku. Gotov BODY
+   je i u dist/STEAM-COMMUNITY-POST-READY.txt. Objavu sam postavljas na Steam.
+4. Tekst jasno odvaja lokalno provjereno od stvarno NEPROVJERENOG Internet
+   spajanja dva racuna/PC-a. Ne predstavljati ovaj alpha kao gotov multiplayer.
+5. Za test s prijateljem obojica trebaju isti ZIP i vec otvoren izolirani mod.
+   Steam poziv iz ugasene igre ne pokrece automatski izolirani mod.
+6. Izvjestaj se priprema lokalno i igrac ga sam pregleda/salje. Gumb Open report
+   folder daje .txt za prilog mailu/Discordu bez GitHub racuna. GitHub Issues je
+   javna dodatna opcija; Steam komentar moze navesti verziju/potpis/korake.
+7. Email/Discord smiju biti samo tvoji potvrdjeni kontakti za javnu objavu.
+   Paket nema tajni webhook, token, automatski upload ili slanje poruka. Kontakti
+   se mogu navesti u Steam tekstu kada ih odaberes; ne izmisljamo adresu/server.
 
-VAZNO ZA OPIS
-Ova verzija testira dvije instance na jednom PC-u, uz prebacivanje fokusa.
-Nije jos online PvP, LAN, split-screen ni istodobni couch PvP s dva kontrolera.
-Nemoj izbaciti tu napomenu iz objave ili obecati spajanje prijatelja preko
-Steama u ovoj verziji. Za lokalni test ne treba prijatelj ili drugi Steam racun.
-Pobjeda Terminatora daje Resistance igracu MISSION FAILED; zaustavljanje
-Terminatora daje Resistance igracu MISSION SUCCESS.
+Ako dogovaras termin testiranja, dodaj tocno vrijeme i vremensku zonu u objavu.
+Termin nije unaprijed obecan u predlosku jer jos nije zadan.
+Nista nije automatski objavljeno na Steam Communityju.
 
-Ne objavljuj runtime, backups, profile, logove, dumpove ni .codex-attachments.
-Pripremljeni source ZIP nema te privatne podatke. Javne datoteke su odabrane
-eksplicitnim popisom, a download sadrzi samo mod kod/DLL-ove, upute i licence.
+Nemoj objavljivati runtime, backups, profile, logove, dumpove ni attachmentse.
+Instalacijski ZIP ima eksplicitan popis mod datoteka, uputa i licenci. Ne sadrzi
+igru niti tvoje saveove. Stari0.5.1 release ostaje dostupan kao lokalni test.
 
 Steam Community igre:
 https://steamcommunity.com/app/954740/discussions/
-Steam formatiranje teksta:
-https://steamcommunity.com/comment/Recommendation/formattinghelp
-
-Lokalni Git repozitorij s povijescu nalazi se u publication/Terminator-Resistance-Multiplayer.
-Source ZIP je snapshot pripremljenog commita; puna povijest ostaje u tom repozitoriju.

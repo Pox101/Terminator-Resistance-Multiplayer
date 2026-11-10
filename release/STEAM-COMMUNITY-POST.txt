@@ -1,41 +1,56 @@
 TITLE:
-[Mod prototype] Infiltrator vs Resistance - first local PvP technical test
+[Mod alpha 0.6] Infiltrator vs Resistance - Steam invite testing + crash reports
 
-BODY (copy the following text into your Steam Community post):
+BODY (copy only the following text into your Steam Community post):
 
-[h2]Resistance Multiplayer (TRMP) - first PvP prototype[/h2]
-I'm sharing an early, unofficial multiplayer experiment for Terminator: Resistance.
+[h2]Resistance Multiplayer (TRMP) - 0.6.0-alpha.1[/h2]
+I'm sharing an early, unofficial multiplayer alpha for Terminator: Resistance. The host plays the original Infiltrator mission; player two controls one existing Resistance soldier in the bunker. Other soldiers remain AI, and the original mission objectives remain in place. PvP is first person.
 
-[b]This download is a LOCAL technical preview: two game instances on ONE PC. Internet/LAN matches and accepting Steam invites into a match are not implemented yet. It is not split-screen or simultaneous two-controller couch PvP. One tester can switch between the two windows to test both characters.[/b]
+[b]Please read before downloading: Steam invite acceptance and relay transport are included, but Internet play between two different Steam accounts/computers has NOT yet been tested. This alpha is for finding out where that flow works or fails. A successful local socket-pair test does not prove Internet connectivity or IP privacy.[/b]
 
-[h3]The scenario[/h3]
-The host plays the original Infiltrator mission. A second player instance takes control of one existing Resistance soldier in the chosen bunker. The other soldiers remain AI. The Infiltrator keeps its original objectives; the Resistance player tries to stop it. PvP is first person.
+[h3]Download - no Git or GitHub account needed[/h3]
+[url=https://github.com/Pox101/Terminator-Resistance-Multiplayer/releases/download/v0.6.0-alpha.1/TRMP-0.6.0-alpha.1.zip]DOWNLOAD TRMP 0.6.0-alpha.1 - player installer ZIP[/url]
+[url=https://github.com/Pox101/Terminator-Resistance-Multiplayer/releases/tag/v0.6.0-alpha.1]Release notes and checksums[/url]
 
-[h3]Implemented in this test[/h3]
+Download the installer ZIP above, not the separate Source code ZIP. Extract ALL files, run Install-Mod.cmd and let it finish. The separate installed mod folder opens; run Launch-Mod.cmd there. No compiler or developer tools are required. START-HERE.txt has the short instructions; QUICK-START.txt has both test modes.
+
+Requires the compatible installed Windows/Steam game build and Infiltrator content. The installer checks the executable and downloads/verifies the pinned official UE4SS dependency. No game executable, content archive or save is included. Installation uses separate copies/profiles and does not overwrite original saves.
+
+[h3]Try the Steam path with a friend - experimental[/h3]
 [list]
-[*]Two locally connected instances with independent character control.
-[*]Native weapon damage, defender elimination and the original mission ending flow.
-[*]First-person Resistance hands holding the plasma rifle.
-[*]Opposing results: Infiltrator completion means Resistance defeat; stopping the Infiltrator means Resistance success.
-[*]Native Restart Mission / Repeat with automatic defender rejoin after loading.
-[*]Separate game copies and copied save profiles; installation does not write to the original game or original saves.
+[*]Both players install THIS SAME alpha ZIP on their own PCs and start Steam Versus (experimental) from the installed launcher.
+[*]Keep both isolated mod games open at their main menus. The host selects Play > Play Versus and invites the friend through the Steam overlay.
+[*]The friend accepts while the mod is ALREADY RUNNING. The host chooses START INFILTRATOR MISSION and finishes the original prompts, loading screen and intro.
+[*]The defender should join after the mission/listener and Steam link are ready. Press Enter on loading screens, including a pale/white loading screen. Allow player/hands setup to finish.
+[*]Report the first failing step: invite arrival, acceptance, lobby joining, relay connection, loading, character control, damage or restart/rejoin.
 [/list]
-Eliminating the controlled soldier does not finish the original mission, and that soldier does not automatically respawn.
+Cold-starting the original game from an invite does not redirect into this mod. There is no host migration. Do not forward/open the engine port on your router; it stays on loopback.
 
-[h3]Download and setup[/h3]
-[url=https://github.com/Pox101/Terminator-Resistance-Multiplayer/releases/download/v0.5.1-first-pvp-test/TRMP-0.5.1-first-pvp-test.zip]Download TRMP 0.5.1-first-pvp-test (installer ZIP)[/url]
-[url=https://github.com/Pox101/Terminator-Resistance-Multiplayer/releases/tag/v0.5.1-first-pvp-test]Release notes, source and screenshot kit[/url]
+[h3]No second PC or friend available?[/h3]
+You can test both characters on one PC: Start Infiltrator mission host, finish the original intro, then Play a Resistance NPC and Join player two. Switch window focus to control each. This is not split-screen or simultaneous two-controller couch PvP.
 
-Extract the ZIP, run Install-Mod.cmd, then open Launch-Mod.cmd in the installed folder. Follow QUICK-START.txt: start the Infiltrator host, finish the original intro, then start/join the Resistance instance. Switch window focus to control each character. No second Steam account or friend is needed for this local test.
+[h3]What has actually been checked[/h3]
+[list]
+[*]Local two-instance independent movement, native damage/death, opposing mission results and original Restart Mission / Repeat with local rejoin.
+[*]Real game packets through a LOCAL Steam socket pair, including defender fire, native Infiltrator death and Resistance MISSION SUCCESS.
+[*]Real Steam authentication, relay availability, private lobby/P2P listener and mission startup. These checks did not involve a remote peer.
+[*]Local diagnostics, privacy filtering, normal/abnormal process exit handling and automated build/tests.
+[/list]
+Infiltrator completion means Resistance MISSION FAILED; stopping the Infiltrator means Resistance MISSION SUCCESS. Eliminating the controlled soldier does not alone finish the original mission, and that soldier does not respawn.
 
-Requires the compatible Steam Windows game build and the installed assets used by the Infiltrator experiment. The installer checks the executable hash and downloads the pinned official UE4SS dependency separately. No game executable, content archive or personal save is included.
+[h3]Still untested / unfinished[/h3]
+[list]
+[*]Separate-account invite delivery/acceptance, real WAN relay routing/IP privacy, remote gameplay and remote restart/rejoin across routers.
+[*]Long full missions, extended stability, connection-loss recovery and broad hardware/game-edition compatibility. Inherited engine RPC security has not been audited.
+[*]More than two players, host migration, cold invite launch, split-screen and finished campaign co-op are unsupported. Vision features, NPC animations/ragdolls, ammo behavior and visuals need work.
+[/list]
+This is an experimental alpha, not a promise of working Internet multiplayer or anti-cheat protection.
 
-[h3]What needs work[/h3]
-Stability, full-length playthrough testing, NPC animation/ragdolls, vision abilities, player ammunition behavior and visual polish remain experimental. This is a development test, not a finished campaign co-op or competitive release. Keep its networking on localhost; it has not been audited for public Internet hosting.
+[h3]Report a problem - GitHub is optional[/h3]
+After a crash, the mod can prepare a LOCAL report. Nothing is uploaded automatically. Open Diagnostic reports in the launcher, review the WHOLE report, then Open report folder to get the small TRMP-report-*.txt.
 
-Steam invitation acceptance and Internet game transport are the next networking milestone. The current Play Versus menu only previews the Steam invite dialog.
+[url=https://github.com/Pox101/Terminator-Resistance-Multiplayer/issues]GitHub Issues[/url] is available for reviewed reports and reproduction steps, but it requires a GitHub account. If you do not use GitHub, reply here with your version, role, report signature and the first failing step. We can arrange full report collection through an announced contact channel. See REPORT-A-BUG.txt in the ZIP.
 
-[h3]Feedback[/h3]
-I'd appreciate reports on installation, connection, independent movement, first-person hands, damage/results and restart/rejoin. Include the mod/game version, PC specs and reproduction steps. The download contains a checklist and feedback template. Please do not post saves, credentials, full crash dumps or unreviewed logs publicly.
+[b]Privacy: GitHub Issues and Steam replies are public. Never post raw logs, crash XML, memory dumps, saves, account details or tokens. The generated report filters those fields, but please review it before sharing. Diagnostic preparation can be disabled in the launcher.[/b]
 
-This is an unofficial community experiment and is not affiliated with the game's developers or publisher.
+Thanks to anyone willing to try this early build and report what happens. This is an unofficial community experiment, not affiliated with the game's developers or publisher.

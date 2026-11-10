@@ -1,8 +1,9 @@
-TRMP 0.6.0-steam-dev - EXPERIMENTAL STEAM TEST
+TRMP 0.6.0-alpha.1 - EXPERIMENTAL STEAM TEST
 
-This development build adds invite acceptance and a Steam relay transport.
-It is not yet validated between separate Steam accounts/machines. The public
-0.5.1 release remains the validated LOCAL technical preview.
+This public alpha includes invite acceptance and a Steam relay transport.
+It is not yet validated between separate Steam accounts/machines. The older
+0.5.1 release is local-only. Read START-HERE.txt; no Git/GitHub account is
+needed for downloading/installing this alpha.
 
 REMOTE TEST SETUP (requires two legitimate, signed-in Steam peers)
 1. Install this same development package on both Windows PCs. Both must have

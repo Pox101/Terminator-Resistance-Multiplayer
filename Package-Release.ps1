@@ -1,4 +1,4 @@
-param([string]$Version='0.6.0-steam-dev')
+param([string]$Version='0.6.0-alpha.1')
 $ErrorActionPreference='Stop'
 if($Version -notmatch '^[0-9A-Za-z][0-9A-Za-z.-]{0,60}$'){throw 'Invalid version.'}
 $dist=Join-Path $PSScriptRoot 'dist'
@@ -6,7 +6,7 @@ New-Item -ItemType Directory -Path $dist -Force | Out-Null
 $stage=Join-Path $dist ('stage-'+$Version+'-'+(Get-Date -Format 'yyyyMMdd-HHmmss-fff'))
 New-Item -ItemType Directory -Path $stage | Out-Null
 $files=@('Install-Mod.ps1','Install-Mod.cmd','Launch-Mod.ps1','Launch-Mod.cmd','Start-Test.ps1','Send-TestCommand.ps1','README.md','LICENSE','THIRD-PARTY-NOTICES.txt',
-    'Diagnostics.psm1','Watch-Game.ps1','Show-Reports.ps1','docs/DIAGNOSTICS-PRIVACY.txt',
+    'Diagnostics.psm1','Watch-Game.ps1','Show-Reports.ps1','docs/DIAGNOSTICS-PRIVACY.txt','START-HERE.txt','REPORT-A-BUG.txt',
     'mod/Scripts/diagnostics.lua',
     'mod/Scripts/main.lua','mod/Scripts/prototype.lua','mod/Scripts/bodies.lua','mod/Scripts/combat.lua','mod/Scripts/combat_rules.lua','mod/Scripts/scenario_rules.lua','mod/Scripts/scenario_runtime.lua','mod/Scripts/mission_rules.lua','mod/Scripts/infiltrator_mission.lua','mod/Scripts/geometry_sync.lua','mod/Scripts/npc_weapon.lua','mod/Scripts/scheduler.lua','mod/Scripts/lobby_state.lua','mod/Scripts/versus_menu.lua',
     'mod/Scripts/session_rules.lua','mod/Scripts/restart_session.lua','mod/Scripts/steam_session.lua',

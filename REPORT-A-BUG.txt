@@ -1,0 +1,27 @@
+TRMP ALPHA - QUICK REPORTING
+
+1. Open 'Diagnostic reports' in the installed launcher.
+2. Select your host/client session; click Prepare latest session if needed.
+3. Read the whole report, then Open report folder. The small generated
+   TRMP-report-*.txt is the file to attach. No Git/GitHub account is needed
+   to prepare it or retrieve it. Never send raw logs/XML, dumps or saves.
+4. Include your mod version, role, what you clicked/did and what happened.
+   The signature and package hash help us group reports from the same build.
+
+REPORTING CHANNELS
+- GitHub Issues (optional GitHub account; PUBLIC):
+  https://github.com/Pox101/Terminator-Resistance-Multiplayer/issues
+  Tick the review/public-sharing acknowledgment if you want to copy the
+  report or open Issues. You submit it yourself in your browser.
+- No GitHub account? Reply to the Steam Community announcement with the
+  mod version, report signature and reproduction steps. The maintainer can
+  arrange collection of the full reviewed .txt through an announced channel.
+- Email/Discord contact details will appear in the announcement if supplied
+  by the maintainer. Only use contacts linked from the official repository
+  or the maintainer's Steam post. No email address/webhook is built into this
+  release, and it does not send any messages or files on your behalf.
+
+Nothing is uploaded automatically. GitHub Issues and Steam replies are public.
+Discord channels are visible to whoever has access; email reveals your sender
+address to the recipient/provider. Choose the recipient and review the report.
+Full collection/retention details: docs/DIAGNOSTICS-PRIVACY.txt.

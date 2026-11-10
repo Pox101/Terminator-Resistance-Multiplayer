@@ -59,6 +59,8 @@ HOW TO SEND IT
 1. Open Diagnostic reports in the launcher. Prepare the latest session if
    needed and review the WHOLE report. Reproduction steps are written by you
    in the issue; they are not silently collected from keyboard input.
+   Open report folder retrieves the generated .txt for an announced email/
+   Discord channel; no Git/GitHub account is needed to get this local file.
 2. To share publicly, tick the review/public-sharing acknowledgment. Copy
    the report or attach its generated .txt file, then click Open GitHub Issues.
 3. In your browser, log into your own GitHub account and submit it yourself
@@ -67,8 +69,11 @@ HOW TO SEND IT
 4. GitHub Issues, pasted reports and uploaded attachments are PUBLIC. Once
    shared, others may copy them; removing your local report does not remove
    remote copies. Never attach raw logs, saves, crash XML or memory dumps.
-   If you prefer private reporting, do not post an issue; wait for a private
-   channel to be announced. No private upload endpoint is configured here.
+   Without GitHub, report version/signature/reproduction steps in the Steam
+   announcement. If you prefer private reporting, wait for a contact channel
+   to be announced. No private upload endpoint is configured here. Email
+   exposes the sender address to its recipient/provider; Discord visibility
+   depends on channel access. No mail/Discord message is sent by this mod.
 
 WHY THIS DESIGN
 There is no telemetry server, embedded webhook, automatic upload, inbound

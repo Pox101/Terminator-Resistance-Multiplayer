@@ -2,7 +2,8 @@ param(
     [string]$GameRoot,
     [string]$DestinationRoot = (Join-Path $env:LOCALAPPDATA 'TRMP-LocalPreview'),
     [string]$DependencyArchive,
-    [switch]$NoSaveImport
+    [switch]$NoSaveImport,
+    [switch]$OpenFolder
 )
 $ErrorActionPreference='Stop'
 $expectedGameHash='5A01BBEE102990B1B1108C8656994ED19D46A9B2735C3B3A11EB9C7921CAFDB4'
@@ -150,3 +151,4 @@ try {
 [pscustomobject]@{product='TRMP-LocalPreview';version=$manifest.version;gameRoot=$GameRoot;transport='loopback';installedUtc=[DateTime]::UtcNow.ToString('o')} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $DestinationRoot 'installation.json') -Encoding utf8
 Write-Output "Installed to $DestinationRoot"
 Write-Output 'Open Launch-Mod.cmd there to start the preview.'
+if($OpenFolder){Start-Process -FilePath (Join-Path $env:SystemRoot 'explorer.exe') -ArgumentList @('"'+$DestinationRoot+'"')}

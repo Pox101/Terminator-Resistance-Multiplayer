@@ -1,3 +1,47 @@
+# 0.6.0-alpha.1 — Steam invitations and local crash reports
+
+Public experimental alpha for volunteer testing. **Actual Internet play
+between two different Steam accounts/machines has NOT yet been validated.**
+Steam invite acceptance and authenticated relay transport are implemented;
+this release does not claim they work end-to-end remotely.
+
+Player installer ZIP: TRMP-0.6.0-alpha.1.zip. No Git, GitHub account, compiler
+or developer tools are needed to download/install. Extract all, run
+Install-Mod.cmd and open Launch-Mod.cmd in the installed folder (opened at
+the end of installation). Start with START-HERE.txt and QUICK-START.txt.
+
+Included: original Infiltrator versus one existing Resistance NPC controlled
+by player two; private two-member Steam lobby/invite handling, experimental
+encrypted/authenticated relay-only tunnel, mission-start UI, restart metadata
+and local diagnostics with explicit review before sharing. No automatic
+report upload, embedded tokens, service or startup task. Open report folder
+retrieves a small reviewed .txt without requiring a GitHub account.
+
+Verified locally: two-instance independent control, native damage/death,
+opposite results, original mission ending fixture and restart/rejoin. A real
+Steam socket-pair test carried engine traffic, defender fire and native host
+death. Real Steam authentication/relay availability/private P2P listener and
+native mission startup were checked. Diagnostic parser/privacy/retention and
+normal/abnormal watcher tests passed; no game crash was induced for testing.
+
+Not yet verified: separate-account invitation delivery/acceptance, relay
+routing/IP privacy between real peers, WAN gameplay and restart/rejoin,
+connection loss across routers, complete long missions/soak testing and broad
+hardware/game-edition compatibility. Inherited engine RPC security is not
+audited. Local success is not proof of Internet readiness or cheat resistance.
+
+Unsupported/unfinished: cold invite launch into the isolated mod, host
+migration, more than2 players, split-screen/simultaneous couch controls,
+finished campaign co-op, full vision features, NPC/ragdoll/visual polish.
+Both remote testers must run THIS SAME alpha mod at its main menu before
+accepting an invite. Keep the IP driver on loopback; do not forward its port.
+
+GitHub Issues are optional and public. Without GitHub, report version,
+signature and reproduction steps in the Steam announcement; full reviewed
+text reports can be attached through an announced email/Discord channel.
+No private contact endpoint is embedded. See REPORT-A-BUG.txt and
+docs/DIAGNOSTICS-PRIVACY.txt. Never post raw logs/XML, dumps, saves or tokens.
+
 # 0.6.0-steam-dev — experimental invitation and relay transport
 
 Adds local crash diagnostics with per-launch correlation, classified native

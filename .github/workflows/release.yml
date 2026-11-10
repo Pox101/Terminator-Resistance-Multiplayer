@@ -1,9 +1,9 @@
-name: Publish tested local preview
+name: Publish experimental alpha
 on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Tested prerelease tag (Steam development builds require separate-peer validation)
+        description: Prerelease tag; release notes must disclose unverified remote networking
         required: true
         type: string
 permissions:
@@ -32,4 +32,4 @@ jobs:
           ./Package-Release.ps1 -Version $env:RELEASE_TAG.Substring(1)
           $assets = @(Get-ChildItem dist/*.zip | ForEach-Object FullName)
           $assets += (Resolve-Path dist/SHA256SUMS.txt).Path
-          gh release create $env:RELEASE_TAG @assets --target $env:GITHUB_SHA --prerelease --title "TRMP $env:RELEASE_TAG" --notes-file docs/RELEASE-NOTES.md
+          gh release create $env:RELEASE_TAG @assets --target $env:GITHUB_SHA --prerelease --latest=false --title "TRMP $env:RELEASE_TAG" --notes-file docs/RELEASE-NOTES.md
