@@ -43,7 +43,7 @@ Add-Button 'Join player two' 20 215 {& (Join-Path $PSScriptRoot 'Send-TestComman
 Add-Button 'Start Infiltrator mission host' 20 265 {Start-Role 'host' 'pvp' 'infiltrator_hunt'}
 Add-Button 'Play a Resistance NPC' 265 265 {Start-Role 'client' 'pvp' 'infiltrator_hunt'}
 Add-Button 'Steam Versus (experimental)' 20 310 {Start-Role 'host' 'pvp' 'infiltrator_hunt' 'steam'}
-Add-Button 'Diagnostic reports' 20 520 {Start-Process -FilePath (Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe') -ArgumentList @('-NoProfile','-File',('"'+(Join-Path $PSScriptRoot 'Show-Reports.ps1')+'"')) -WindowStyle Hidden}
+Add-Button 'Diagnostic reports' 20 520 {Start-Process -FilePath (Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe') -ArgumentList @('-NoProfile','-File',('"'+(Join-Path $PSScriptRoot 'Show-Reports.ps1')+'"')) -WindowStyle Normal}
 Add-Button 'Close both game copies' 265 215 {
     foreach($target in 'client','host') {
         $exe=Join-Path $PSScriptRoot "runtime\$target\Terminator\Binaries\Win64\Terminator-Win64-Shipping.exe"
