@@ -1,0 +1,19 @@
+Terminator Resistance and its content belong to their respective owners.
+This is an unofficial experimental mod. No game executable, asset, save,
+Steam credential or Steamworks redistributable is included in the archive.
+
+UE4SS v3.0.1 is downloaded separately from its official release during
+installation and verified against the pinned archive SHA256:
+4B47D4BCEDDD2F561A4E395BFA00924CCFC945AF576A2D0C613E6537846C57EC
+https://github.com/UE4SS-RE/RE-UE4SS/releases/tag/v3.0.1
+UE4SS remains covered by its own license and upstream notices.
+
+GameNetworkingSockets public interface headers by Valve Corporation are used
+to compile the optional Steam availability/local socket-pair diagnostic.
+The BSD license is included in licenses/GameNetworkingSockets-LICENSE.txt
+in binary releases and third_party/gamenetworkingsockets/LICENSE in source.
+Pinned upstream commit: d534c19aa760df3fb75fd20db13ba1932b8a5463.
+https://github.com/ValveSoftware/GameNetworkingSockets
+
+Lupa 2.6 is a development/test dependency only; it is not included in the
+player package and is not needed to run the mod.
