@@ -1,3 +1,24 @@
+# 0.5.0 — mission restart and Resistance hands preview
+
+Keeps the original Restart Mission call and tracks local session generations.
+The previously connected defender waits for the new host listener, rejoins
+and takes control of a fresh native soldier. Native loading-screen key presses
+and the original Infiltrator intro remain. A restarted host process still
+requires an explicit join. The generation provider is loopback-only.
+
+Clears old-world references before gameplay updates when native C++ travel
+bypasses reflected OpenLevel hooks. Finished clients stay quiescent through
+disconnect; the new world resets their input/death presentation.
+
+Adds installed Avatar arms, native plasma idle/aim/fire/reload animations and
+Weapon_socket attachment to the Resistance first-person view. Replicates the
+native rifle's reload flag to drive the hands. Includes reload/protocol and
+restart-generation tests. Both instances should use this version.
+
+Local accelerated restart validation does not certify long sessions or a
+complete normal playthrough. Steam invitation acceptance and Internet game
+transport remain unimplemented.
+
 # 0.4.0 — native mission lifecycle preview
 
 Preserves native Infiltrator weapon hits and the original soldier's health,

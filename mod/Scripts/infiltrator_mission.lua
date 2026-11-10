@@ -176,7 +176,10 @@ return function(H,C,emit,prototype,bodies)
                         if not p.dead then p.dead=true;emit('mission_defender_eliminated='..p.id) end
                     end
                     local gun=weapon(p.native)
-                    if valid(gun) then p.ammo=math.max(0,math.min(10000,gun:GetCurrentAmmoInClip())) end
+                    if valid(gun) then
+                        p.ammo=math.max(0,math.min(10000,gun:GetCurrentAmmoInClip()))
+                        p.reloading=gun.bIsReloading
+                    else p.reloading=false end
                 end
             end
         end

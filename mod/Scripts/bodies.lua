@@ -9,6 +9,7 @@ return function(H,C,emit,prototype)
     local currentFov, aiming = 85, false
     local cameraFocused=false
     local combatView,hud,hudText,fpWeapon,fpPawn=nil,nil,nil,nil,nil
+    local fpArms,fpPose,fpPoseUntil=nil,nil,0
     local hudValue,recoilUntil,deadInput='',0,false
     local effectDefaults
     local hostAim,hostFov=nil,nil
@@ -42,6 +43,12 @@ return function(H,C,emit,prototype)
         vision='/Game/Materials/DLC1/Characters/M_InfiltratorVisionPostprocessTest_Inst.M_InfiltratorVisionPostprocessTest_Inst',
         weapon='/Game/Meshes/Weapons/Plasma/SK_Plasma.SK_Plasma',
         worldWeapon='/Game/Meshes/Weapons/Plasma/SK_PlasmaNPC.SK_PlasmaNPC',
+        hands='/Game/Meshes/Characters/Avatar/SK_Avatar.SK_Avatar',
+        handsIdle='/Game/Animations/Avatar/Plasma/A_AvatarPlasmaIdle.A_AvatarPlasmaIdle',
+        handsAim='/Game/Animations/Avatar/Plasma/A_AvatarPlasmaAiming.A_AvatarPlasmaAiming',
+        handsShot='/Game/Animations/Avatar/Plasma/A_AvatarPlasmaShot.A_AvatarPlasmaShot',
+        handsShotAim='/Game/Animations/Avatar/Plasma/A_AvatarPlasmaShotAim.A_AvatarPlasmaShotAim',
+        handsReload='/Game/Animations/Avatar/Plasma/A_AvatarPlasmaReload.A_AvatarPlasmaReload',
         plasmaClass='/Game/Blueprints/Weapons/WP_PlasmaR.WP_PlasmaR'
     }
     local function asset(name)
@@ -247,7 +254,7 @@ return function(H,C,emit,prototype)
             if deadInput then pc:ResetIgnoreMoveInput();pc:ResetIgnoreLookInput() end
             worldAddress=world:GetAddress();bodies={};camera=nil;cameraPawn=nil
             reticle=nil;reticlePawn=nil;lastFrame=nil;currentFov=85;aiming=false
-            hud=nil;hudText=nil;fpWeapon=nil;fpPawn=nil;combatView=nil;effectDefaults=nil;hudValue='';deadInput=false
+            hud=nil;hudText=nil;fpWeapon=nil;fpPawn=nil;fpArms=nil;fpPose=nil;fpPoseUntil=0;combatView=nil;effectDefaults=nil;hudValue='';deadInput=false
             nextUpdate=0;retryAfter=0;thirdPerson=true;vision=false
             readyAfter=os.time()+12
         end
@@ -307,6 +314,7 @@ return function(H,C,emit,prototype)
     local function dispose()
         if valid(hud) then hud:RemoveFromParent() end
         if valid(fpWeapon) then fpWeapon:K2_DestroyActor() end
+        if valid(fpArms) then fpArms:K2_DestroyActor() end
         if valid(reticle) then reticle:RemoveFromParent() end
         if valid(camera) then camera:K2_DestroyActor() end
         for _,body in pairs(bodies) do
@@ -314,7 +322,7 @@ return function(H,C,emit,prototype)
             if valid(body.driver) then body.driver:K2_DestroyActor() end
             if valid(body.weapon) then body.weapon:K2_DestroyActor() end
         end
-        bodies={};camera=nil;cameraPawn=nil;reticle=nil;reticlePawn=nil
+        bodies={};camera=nil;cameraPawn=nil;reticle=nil;reticlePawn=nil;fpArms=nil;fpPose=nil;fpPoseUntil=0
     end
     local function isReady(pc)
         return valid(pc) and valid(pc.Pawn) and pc:GetWorld():GetAddress()==worldAddress
@@ -340,14 +348,26 @@ return function(H,C,emit,prototype)
             slot:SetPosition({X=30,Y=30});slot:SetAutoSize(true)
             hud:SetVisibility(3);hud:AddToViewport(110)
         end
-        if not valid(fpWeapon) or not valid(fpPawn) or fpPawn:GetAddress()~=pc.Pawn:GetAddress() then
+        if not valid(fpWeapon) or not valid(fpArms) or not valid(fpPawn) or fpPawn:GetAddress()~=pc.Pawn:GetAddress() then
+            fpArms=spawn(pc,'SkeletalMeshActor')
+            local hands=fpArms.SkeletalMeshComponent
+            hands:SetSkeletalMesh(asset('hands'),true);hands:SetCollisionEnabled(0);hands:SetCastShadow(false)
+            local component=C.role=='client' and camera.CameraComponent or pc.Pawn.Camera
+            fpArms:K2_AttachToComponent(component,FName('None'),2,2,2,false)
+            -- The native Avatar is authored around its animated camera bone.
+            -- Calibrated for the mirror's 85-degree, eye-level camera; the gun
+            -- follows Weapon_socket rather than an independent camera offset.
+            fpArms:K2_SetActorRelativeLocation({X=72.269,Y=7.265,Z=-134.806},false,{},true)
+            fpArms:K2_SetActorRelativeRotation({Pitch=0,Yaw=-90,Roll=0},false,{},true)
+            assert(hands:DoesSocketExist(FName('Weapon_socket')),'Native hand weapon socket missing')
+            hands:PlayAnimation(asset('handsIdle'),true);fpPose='handsIdle';fpPoseUntil=0
             fpWeapon=spawn(pc,'SkeletalMeshActor');fpPawn=pc.Pawn
             fpWeapon.SkeletalMeshComponent:SetSkeletalMesh(asset('weapon'),true)
             fpWeapon.SkeletalMeshComponent:SetCollisionEnabled(0)
-            local component=C.role=='client' and camera.CameraComponent or pc.Pawn.Camera
-            fpWeapon:K2_AttachToComponent(component,FName('None'),2,2,2,false)
-            fpWeapon:K2_SetActorRelativeLocation({X=38,Y=13,Z=-19},false,{},true)
-            fpWeapon:K2_SetActorRelativeRotation({Pitch=0,Yaw=-90,Roll=90},false,{},true)
+            fpWeapon:K2_AttachToComponent(hands,FName('Weapon_socket'),2,2,2,false)
+            fpWeapon:K2_SetActorRelativeLocation({X=0,Y=0,Z=0},false,{},true)
+            fpWeapon:K2_SetActorRelativeRotation({Pitch=0,Yaw=0,Roll=0},false,{},true)
+            emit('first_person_hands=native_avatar weapon_socket=Weapon_socket')
         end
         if not effectDefaults then
             local path=paths.plasmaClass
@@ -380,8 +400,14 @@ return function(H,C,emit,prototype)
         local missionEnded=combatView and combatView.missionPhase and combatView.missionPhase~='active'
         local dead=own and own.health<=0 or false
         fpWeapon:SetActorHiddenInGame(not first or dead or missionEnded)
+        fpArms:SetActorHiddenInGame(not first or dead or missionEnded)
         local reloading=own and own.reloadMs>0 or false
-        fpWeapon:K2_SetActorRelativeLocation({X=time<recoilUntil and 32 or 38,Y=13,Z=reloading and -26 or -19},false,{},true)
+        if reloading and fpPose~='handsReload' then
+            fpArms.SkeletalMeshComponent:PlayAnimation(asset('handsReload'),false);fpPose='handsReload'
+        elseif not reloading and (fpPose=='handsReload' or time>=fpPoseUntil) then
+            local pose=aiming and 'handsAim' or 'handsIdle'
+            if pose~=fpPose then fpArms.SkeletalMeshComponent:PlayAnimation(asset(pose),true);fpPose=pose end
+        end
         local blocked=dead or missionEnded or false
         if blocked~=deadInput then
             if blocked then pc:SetIgnoreMoveInput(true);pc:SetIgnoreLookInput(true)
@@ -439,6 +465,12 @@ return function(H,C,emit,prototype)
         local rotation=StaticFindObject('/Script/Engine.Default__KismetMathLibrary'):FindLookAtRotation(location,finish)
         if combatView and combatView.you==id then
             recoilUntil=H.GetGameplayStatics():GetRealTimeSeconds(pc)+0.09
+            if valid(fpArms) then
+                fpPose=aiming and 'handsShotAim' or 'handsShot'
+                local animation=asset(fpPose)
+                fpArms.SkeletalMeshComponent:PlayAnimation(animation,false)
+                fpPoseUntil=H.GetGameplayStatics():GetRealTimeSeconds(pc)+animation:GetPlayLength()
+            end
             if valid(fpWeapon) then location=fpWeapon:K2_GetActorLocation() end
         end
         if effectDefaults then
@@ -450,7 +482,7 @@ return function(H,C,emit,prototype)
         setCombat=setCombat,combatFrame=combatFrame,shotEffect=shotEffect,
         clearWorld=function()
             bodies={};worldAddress=0;camera=nil;cameraPawn=nil;reticle=nil;reticlePawn=nil
-            hud=nil;hudText=nil;fpWeapon=nil;fpPawn=nil;combatView=nil;effectDefaults=nil
+            hud=nil;hudText=nil;fpWeapon=nil;fpPawn=nil;fpArms=nil;fpPose=nil;fpPoseUntil=0;combatView=nil;effectDefaults=nil
             lastFrame=nil;created={};cameraFocused=false;hudValue='';hostAim=nil;hostFov=nil
             -- Keep deadInput until the new controller can safely clear its
             -- input lock in update; do not touch the old controller here.

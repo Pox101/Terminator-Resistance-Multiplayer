@@ -36,6 +36,7 @@ local combat = bodies and C.combatEnabled and require('combat')(H,C,emit,prototy
 local scenario=C.scenario=='infiltrator_hunt' and require('scenario_runtime')(H,C,emit) or nil
 local geometry=C.scenario=='infiltrator_hunt' and require('geometry_sync')(H,C,emit) or nil
 local versusMenu=require('versus_menu')(H,C,emit)
+local session=C.scenario=='infiltrator_hunt' and require('restart_session')(H,C,emit,context) or nil
 local listenReadyAfter,listenWorld=0,0
 local function configureScenarioHosting()
     if C.role~='host' or C.scenario~='infiltrator_hunt' then return end
@@ -171,7 +172,10 @@ local function pollCommands(ended)
         os.remove(C.directory..'/command.txt')
         if cmd~='' then
             if not ended or cmd=='join' or cmd=='quit' then command(cmd)
-            else emit('mission_finished='..tostring(combat.state().missionPhase)..'; join_or_quit_available') end
+            else
+                local state=combat and combat.state()
+                emit('mission_finished='..tostring(state and state.missionPhase or 'restarting')..'; join_or_quit_available')
+            end
         end
     elseif f then f:close() end
     local queued=keyCommands;keyCommands={}
@@ -180,6 +184,11 @@ local function pollCommands(ended)
     end
 end
 local function update()
+    if session then
+        session.update()
+        if session.blocked() then pollCommands(true);return end
+        if session.joining() then missionPresentationFrozen=false end
+    end
     -- A finished client keeps its result on screen without traversing old
     -- replicated actors while the host closes/restarts its world.
     if missionPresentationFrozen then pollCommands(true);return end
@@ -192,11 +201,13 @@ local function update()
     if prototype then prototype.update(context()) end
     if bodies then bodies.update(context()) end
     if combat then combat.update(context()) end
+    if session and combat then session.observe(combat.state()) end
     pollCommands(false)
     ticks=ticks+1
     if ticks%50==0 then snapshot() end
 end
 local function input()
+    if session and session.blocked() then return end
     if missionPresentationFrozen then return end
     local pc=context()
     local aim=prototype and prototype.input(pc) or nil
@@ -212,7 +223,8 @@ local function input()
 end
 -- Fixed game-thread callbacks avoid creating/unreferencing Lua registry
 -- entries concurrently in LoopAsync + ExecuteInGameThread (UE4SS issue 1180).
-local scheduler=require('scheduler')(H,emit,context,update,input,function()
+local scheduler=require('scheduler')(H,emit,context,update,input,function(reason)
+    if session then session.onTravel(reason) end
     missionPresentationFrozen=false;movingUntil=0;keyCommands={}
     prototypeModeAddress=0;listenWorld=0;listenReadyAfter=0
     for _,component in ipairs({prototype,bodies,combat}) do

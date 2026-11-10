@@ -9,8 +9,15 @@ return function(H,emit,context,update,input,resetWorld,dormant)
     local function ensureTick(pc)
         if not valid(pc) or not valid(pc:GetWorld()) then return end
         local address=pc:GetWorld():GetAddress()
-        if valid(widget) and worldAddress==address then return end
-        if valid(widget) then widget:RemoveFromParent() end
+        if worldAddress==address and valid(widget) then return end
+        if worldAddress~=0 and worldAddress~=address then
+            -- Native RestartGame calls C++ OpenLevel directly, bypassing the
+            -- reflected travel hooks on this build. Detect its new world on
+            -- the first game-thread tick, before any gameplay update reads
+            -- cached actors. Never dereference the old world's widget.
+            widget=nil
+            if resetWorld then resetWorld('world_loaded') end
+        elseif valid(widget) then widget:RemoveFromParent() end
         local path='/Game/UI/Globals/WB_Empty.WB_Empty'
         local class=StaticFindObject(path..'_C')
         if not valid(class) then LoadAsset(path);class=StaticFindObject(path..'_C') end
@@ -40,15 +47,16 @@ return function(H,emit,context,update,input,resetWorld,dormant)
     end
     RegisterCustomEvent('Tick',pump)
     RegisterCustomEvent('ReceiveTick',pump)
-    local function beforeTravel()
+    local function invalidate(reason)
         -- World-owned widgets and component handles may already be tearing
         -- down. Drop Lua references without calling methods on old objects.
         travelling=true;widget=nil;worldAddress=0;lastFrame=-1;nextUpdate=0
-        if resetWorld then resetWorld() end
+        if resetWorld then resetWorld(reason) end
     end
+    local function beforeTravel()invalidate('before_travel')end
     -- UE4SS 3.0.1's LoadMap pre-callback corrupts its Lua call stack in this
     -- build. Supported OpenLevel/ClientTravel hooks call beforeTravel instead.
-    RegisterLoadMapPostHook(function()beforeTravel();travelling=false;pump()end)
+    RegisterLoadMapPostHook(function()invalidate('world_loaded');travelling=false;pump()end)
     -- The only deferred callback is created at mod load; no asynchronous loop
     -- creates registry references while game-thread work is being executed.
     ExecuteInGameThread(pump)

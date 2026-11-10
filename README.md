@@ -33,15 +33,18 @@ remain unverified. See [the related UE4SS issue](https://github.com/UE4SS-RE/RE-
   defender-kill victory condition or automatic player respawn.
 - The client receives the native mission outcome. Native mission completion
   and Infiltrator defeat stop further defender actions and show an end message.
-  For another test, close and relaunch the isolated preview games. The native
-  **Restart Mission** path is unreliable with a connected client.
+  **Restart Mission** reloads the native mission. The previously connected
+  defender waits through the disconnect and rejoins when hosting is ready.
+  Finish the original loading screens with a key press on both games.
+- The Resistance player's first-person view uses the installed Avatar arms,
+  plasma idle/aim/fire/reload animations and the native weapon socket.
 
 This is a one-defender experiment. Other soldiers remain NPCs. Additional
-human slots, full NPC animation/ragdoll synchronization and polished first-person
-hands still need work. End-to-end native weapon hits, defender death and the
+human slots, full NPC animation/ragdoll synchronization and visual polish
+still need work. End-to-end native weapon hits, defender death and the
 native ending flow were exercised in an accelerated local integration test;
 a normal full-length playthrough and longer sessions remain unverified. The joining player's
-weapon/body presentation uses placeholder visuals.
+world-body presentation still uses simplified visuals.
 
 ## Earlier arena prototype
 
@@ -52,7 +55,8 @@ weapon/body presentation uses placeholder visuals.
 - PvP uses first person; its third-person switch is disabled.
 - Co-op blocks damage between players and permits first/third person.
 - A combat HUD, weapon meshes, muzzle/audio effects and Terminator vision
-  preview. First-person hands and proper weapon animations remain unfinished.
+  preview. The plasma view model uses native Avatar hands and animations;
+  faction-specific hands and complete weapon animation support need work.
 
 The arena prototype assigns the native host as human and joining base
 characters as Terminators. Human/Terminator balancing is preliminary (100
@@ -133,14 +137,20 @@ soldier model, walking/idle animation and disappear on death; full ragdolls
 and precise weapon-animation replication are unfinished. The defender's
 movement drives the original NPC, and firing/reloading commands use that
 NPC's original weapon component. Its original health and quest/death
-callbacks remain authoritative. The current client weapon mesh is a visual
-placeholder. The installed Infiltrator/Franco model is used;
+callbacks remain authoritative. The client plasma view model attaches to the
+native Avatar's hand socket. The installed Infiltrator/Franco model is used;
 an exact film-model T-850 designation has not been established.
 
 There is no added survival timer or replacement victory condition. Killing
 the controlled soldier removes that original NPC; the Infiltrator mission
 continues. Restart through the game's original mission flow. The prototype
 currently supports one remote NPC player; larger player counts are untested.
+
+After **Restart Mission**, the defender may briefly show the main menu while
+the host reloads and repeats its intro. It rejoins automatically; press a key
+to finish each game's loading screen. This recovery follows only a previously
+joined local host in the same running process. Relaunching the host requires
+an explicit join again. Both instances must use this version.
 
 ## Controls
 

@@ -36,3 +36,6 @@ print(f"PASS: {scheduler_tests(scheduler)} game-thread scheduling/travel/reentry
 lobby = compile_lua((root / "mod/Scripts/lobby_state.lua").read_text(), "lobby_state.lua")()
 lobby_tests = compile_lua((root / "tests/lobby_state_test.lua").read_text(), "lobby_state_test.lua")()
 print(f"PASS: {lobby_tests(lobby)} Steam lobby status/UI checks")
+session = compile_lua((root / "mod/Scripts/session_rules.lua").read_text(), "session_rules.lua")()
+session_tests = compile_lua((root / "tests/session_rules_test.lua").read_text(), "session_rules_test.lua")()
+print(f"PASS: {session_tests(session)} restart generation/rejoin checks")

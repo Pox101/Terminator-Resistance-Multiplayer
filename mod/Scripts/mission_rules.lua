@@ -26,7 +26,7 @@ end
 function M.encode(you,players,phase)
     assert(phases[phase or 'active'],'Invalid mission phase')
     local rows={}
-    for _,p in ipairs(players) do rows[#rows+1]=string.format('%d,%s,%d,%d,%d',p.id,p.faction,p.health,p.maxHealth,p.ammo) end
+    for _,p in ipairs(players) do rows[#rows+1]=string.format('%d,%s,%d,%d,%d,%d',p.id,p.faction,p.health,p.maxHealth,p.ammo,p.reloading and 1 or 0) end
     return 'TRMP1|M|'..you..'|'..(phase or 'active')..'|'..table.concat(rows,';')
 end
 function M.decode(text)
@@ -40,11 +40,12 @@ function M.decode(text)
     local players,seen={},{}
     if payload:sub(1,1)==';' or payload:sub(-1)==';' or payload:find(';;',1,true) then return nil end
     for row in payload:gmatch('[^;]+') do
-        local id,faction,hp,max,ammo=row:match('^(%d+),(%a+),(%d+),(%d+),(%d+)$')
+        local id,faction,hp,max,ammo,reloading=row:match('^(%d+),(%a+),(%d+),(%d+),(%d+),([01])$')
+        if not id then id,faction,hp,max,ammo=row:match('^(%d+),(%a+),(%d+),(%d+),(%d+)$');reloading='0' end
         id,hp,max,ammo=tonumber(id),tonumber(hp),tonumber(max),tonumber(ammo)
         if not id or id>2147483647 or seen[id] or (faction~='human' and faction~='terminator')
             or max<1 or max>10000 or hp>max or ammo>10000 then return nil end
-        seen[id]=true;players[#players+1]={id=id,faction=faction,health=hp,maxHealth=max,ammo=ammo,reserve=0,reloadMs=0,respawnMs=0,kills=0,deaths=hp==0 and 1 or 0}
+        seen[id]=true;players[#players+1]={id=id,faction=faction,health=hp,maxHealth=max,ammo=ammo,reserve=0,reloadMs=reloading=='1' and 1 or 0,respawnMs=0,kills=0,deaths=hp==0 and 1 or 0}
         if #players>2 then return nil end
     end
     if not seen[you] then return nil end

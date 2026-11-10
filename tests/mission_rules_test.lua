@@ -35,5 +35,10 @@ return function(M)
     check(not M.decode('TRMP1|M|2|victory|2,human,200,200,45'),'invented result rejected')
     check(not M.decode('TRMP1|M|2|active|2,human,200,200,45;'),'trailing empty slot rejected')
     check(not M.decode('TRMP1|M|2|active|2,human,200,200,45;;1,terminator,1000,1000,0'),'empty slot rejected')
+    rows[2].reloading=true;decoded=M.decode(M.encode(2,rows))
+    check(decoded.players[2].reloadMs>0,'native reload drives client hand animation')
+    rows[2].reloading=false;decoded=M.decode(M.encode(2,rows))
+    check(decoded.players[2].reloadMs==0,'native reload completion restores idle hands')
+    check(not M.decode('TRMP1|M|2|active|2,human,200,200,45,2'),'invalid native reload flag rejected')
     return n
 end
